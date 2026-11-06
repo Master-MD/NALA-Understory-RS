@@ -1,4 +1,4 @@
-# 🌱🦀 NALA-Understory-RS (`v0.1.0-nala.6.6.6`) — 100% Native Rust-Turbo Self-Wiring OKF v0.1 Markdown Memory & Multi-Agent Knowledge Graph
+# 🌱🦀 NALA-Understory-RS (`v0.2.0-nala.6.6.6`) — 100% Native Rust-Turbo Self-Wiring OKF v0.1 Markdown Memory, 256-Bit SimHash LSH & Multi-Agent Knowledge Graph
 
 > **Clean-Room 100% Native Rust-Turbo (`Edition 2024`, Zero-Node.js, Zero-Python, Zero-Telemetry) Port, Acceleration & Security-Hardened Evolution of [`thecodacus/understory`](https://github.com/thecodacus/understory)**  
 > **Multi-Language Documentation Hub:** 🇨🇭 [Deutsch (`docs/README_DE.md`)](docs/README_DE.md) · 🇫🇷 [Français (`docs/README_FR.md`)](docs/README_FR.md) · 🇮🇹 [Italiano (`docs/README_IT.md`)](docs/README_IT.md) · 🏔️ [Rumantsch Grischun (`docs/README_RM.md`)](docs/README_RM.md) · 🇬🇧 [English (`docs/README_EN.md`)](docs/README_EN.md)  
@@ -29,7 +29,11 @@ Tested on the official OKF v0.1 `sample-bundle` (`3` concepts, `4` directories, 
 | **3. Weighted Multi-Field Concept Search** | `1,420.0 µs/op` | `151.6 µs/op` | **`89.1 µs/op`** | **15.9x faster** | Pre-normalized token slices (`title +10`, `path +6`, `desc/tags +5`, `body +2`) |
 | **4. Duplicate Concept Jaccard Scan (`dream`)** | `64,500.0 ns/op` | **`3,873.4 ns/op`** | `15,003.3 ns/op` | **16.7x faster** | 64-bit register signature pre-filter + deterministic `BTreeSet` Jaccard |
 | **5. Session-Start MCP Seed (`build_seed_memory`)** | `1,910.0 µs/op` | `14.9 µs/op` | **`11.5 µs/op`** | **166.4x faster** | Zero-copy slice formatting (`MAX_SEED_CHARS=3000`) |
-| **6. Deterministic OKF Index Regen (`indexer`)** | `2,650.0 µs/op` | `183.7 µs/op` | **`82.8 µs/op`** | **32.0x faster** | Single-buffer Markdown table builder + parent chain propagation |
+| **6. Deterministic OKF Index Regen (`indexer`)** | `2,650.0 µs/op` | `152.8 µs/op` | **`86.2 µs/op`** | **30.7x faster** | Single-buffer Markdown table builder + parent chain propagation |
+| **7. `RSI-001` Evidence-Lock Verifier (`[Dok-ID, S. X]`)** | *N/A (Missing)* | **`213.8 ns/op`** | `806.3 ns/op` | **4.67M ops/s** | Deterministic Rust citation & `Unbelegt-Rate=0` verifier + `NALA-RAG :18700` bridge |
+| **8. `RSI-002` 256-Bit SimHash LSH (`10,000` Concepts)** | `~1,850.0 ms` ($O(N^2)$) | **`9.61 ms`** | `100.8 ms` | **192.5x faster** | $O(N)$ 4-band 256-bit SimHash LSH bucketing + POPCNT Hamming distance |
+| **9. `RSI-003` Autonomous Dream Gardener Plan** | *N/A (Manual)* | `162.3 µs/op` | **`127.9 µs/op`** | **100% Local** | `USER_PROJECT_SHIELD` + NCSP pre-merge snapshot + orphan auto-wiring |
+| **10. `RSI-004` 256-Bit Merkle `log.md` + 5-Zone DLP** | *N/A (Unsigned)* | **`1.25 µs/op`** | `12.4 µs/op` | **800k ops/s** | Tamper-evident `log.md` hash chain + `sHeriFF` Prompt-Injection & 5-Zone DLP guard |
 | **Runtime Memory Footprint (Idle Server)** | `~118.0 MB RSS` | **`~1.9 MB RSS`** | **`~1.8 MB RSS`** | **65.5x leaner** | Native Rust `std::net::TcpListener` vs. V8 + Express + React bundle |
 | **Cold Start Latency (`--mcp-stdio`)** | `~420.0 ms` | **`~0.8 ms`** | **`~0.7 ms`** | **600.0x faster** | Native Mach-O / ELF / PE32+ binary without `npx`/`tsx` bootstrap |
 

@@ -6,7 +6,7 @@
 set -eu
 
 REPO="Master-MD/NALA-Understory-RS"
-VERSION="${NALA_UNDERSTORY_VERSION:-v0.1.0-nala.6.6.6}"
+VERSION="${NALA_UNDERSTORY_VERSION:-v0.2.0-nala.6.6.6}"
 INSTALL_DIR="${NALA_INSTALL_DIR:-$HOME/bin}"
 
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"

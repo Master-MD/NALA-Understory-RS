@@ -4,7 +4,7 @@
 # ============================================================================
 $ErrorActionPreference = "Stop"
 $Repo = "Master-MD/NALA-Understory-RS"
-$Version = if ($env:NALA_UNDERSTORY_VERSION) { $env:NALA_UNDERSTORY_VERSION } else { "v0.1.0-nala.6.6.6" }
+$Version = if ($env:NALA_UNDERSTORY_VERSION) { $env:NALA_UNDERSTORY_VERSION } else { "v0.2.0-nala.6.6.6" }
 $InstallDir = if ($env:NALA_INSTALL_DIR) { $env:NALA_INSTALL_DIR } else { "$HOME\bin" }
 
 New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
