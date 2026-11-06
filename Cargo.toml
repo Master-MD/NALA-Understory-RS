@@ -1,0 +1,19 @@
+[package]
+name = "nala-understory-rs"
+version = "0.1.0-nala.6.6.6"
+edition = "2024"
+authors = ["NALA-OS Open-Source Engineering", "thecodacus (Original TypeScript Understory)"]
+license = "Apache-2.0"
+description = "100% Native Rust-Turbo (Edition 2024, Zero-Node.js, Zero-Python, Zero-Telemetry) Self-Wiring Plain-Markdown OKF v0.1 Memory Engine, Single-Pass Living Graph & Anti-Drift Linter, 3-Tier Hot/Fingerprint Cache, Multi-Profile Isolation, Streamable HTTP/Stdio MCP Server & 5-Language AAA Studio"
+repository = "https://github.com/Master-MD/NALA-Understory-RS"
+
+[[bin]]
+name = "nala-understory-rs"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
