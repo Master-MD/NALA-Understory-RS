@@ -10,7 +10,7 @@ AI agents suffer from session amnesia and documentation drift. **NALA-Understory
   - **`RSI-002` 256-Bit SimHash LSH (`9.31 ms / 10k`)**: $O(N)$ 4-band LSH duplicate clustering for `100,000+` concepts.
   - **`RSI-003` Autonomous Dream Gardener (`134.7 µs/op`)**: Nightly graph maintenance with `USER_PROJECT_SHIELD` and NCSP pre-merge snapshot.
   - **`RSI-004` 256-Bit Merkle `log.md` & 5-Zone DLP (`1.29 µs/op`)**: Tamper-evident hash chain and `sHeriFF` Prompt-Injection / multi-tenant isolation.
-  - **`RSI-005` Lock-Free CRDT Multi-Node Sync (`740.5 ns/op`)**: Conflict-free H1 section LWW merge and 256-bit bundle Merkle root across `M4 Max <-> nala-brain <-> Beelink`.
+  - **`RSI-005` Lock-Free CRDT Multi-Node Sync (`740.5 ns/op`)**: Conflict-free H1 section LWW merge and 256-bit bundle Merkle root across `M4 Max <-> nala-brain <-> nala-worker`.
   - **`RSI-006` 2-Hop GraphRAG Context Compiler (`162.3 µs/op`)**: Zone-filtered 2-hop subgraph packing within an exact character/token budget.
   - **`RSI-007` Incremental Delta-Arena (`2.01 µs/op`)**: Zero-polling single-file `(mtime_ns, size_bytes, fnv1a_64)` delta detection and parent `index.md` update.
   - **`RSI-008` Encrypted-at-Rest Vault Sections (`# [VAULT:zone]`, `2.36 µs/op`)**: Authenticated ARX-256 + MAC cipher blocks embedded directly inside standard OKF Markdown files.

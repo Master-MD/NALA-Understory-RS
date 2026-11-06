@@ -34,7 +34,7 @@ Tested on the official OKF v0.1 `sample-bundle` (`3` concepts, `4` directories, 
 | **8. `RSI-002` 256-Bit SimHash LSH (`10,000` Concepts)** | `~1,850.0 ms` ($O(N^2)$) | **`9.31 ms`** | `81.14 ms` | **198.7x faster** | $O(N)$ 4-band 256-bit SimHash LSH bucketing + POPCNT Hamming distance |
 | **9. `RSI-003` Autonomous Dream Gardener Plan** | *N/A (Manual)* | `134.74 µs/op` | **`99.24 µs/op`** | **100% Local** | `USER_PROJECT_SHIELD` + NCSP pre-merge snapshot + orphan auto-wiring |
 | **10. `RSI-004` 256-Bit Merkle `log.md` + 5-Zone DLP** | *N/A (Unsigned)* | **`1,291.8 ns/op`** | `9,456.1 ns/op` | **774k ops/s** | Tamper-evident `log.md` hash chain + `sHeriFF` Prompt-Injection & 5-Zone DLP guard |
-| **11. `RSI-005` CRDT Multi-Node Section Merge** | *N/A (Missing)* | **`740.5 ns/op`** | `1,430.9 ns/op` | **1.35M ops/s** | Conflict-free H1 section LWW merge + 256-bit bundle Merkle root (`M4 Max <-> nala-brain <-> Beelink`) |
+| **11. `RSI-005` CRDT Multi-Node Section Merge** | *N/A (Missing)* | **`740.5 ns/op`** | `1,430.9 ns/op` | **1.35M ops/s** | Conflict-free H1 section LWW merge + 256-bit bundle Merkle root (`M4 Max <-> nala-brain <-> nala-worker`) |
 | **12. `RSI-006` 2-Hop GraphRAG Context Compiler** | *N/A (Missing)* | `162.27 µs/op` | **`121.47 µs/op`** | **Sub-0.17 ms** | Zone-filtered 2-hop subgraph packing within strict char/token budget |
 | **13. `RSI-007` Incremental Delta-Arena (`<18 µs` SLA)** | `3,840.0 µs/op` | **`2.01 µs/op`** | `4.38 µs/op` | **1,910.4x faster** | Zero-polling `(mtime_ns, size_bytes, fnv1a_64)` single-file delta & parent `index.md` update |
 | **14. `RSI-008` Vault ARX-256 + MAC (`# [VAULT:zone]`)** | *N/A (Plaintext)* | **`2,357.0 ns/op`** | `7,464.6 ns/op` | **424k ops/s** | Authenticated ARX-256 stream cipher + 256-bit keyed MAC inside OKF Markdown |
@@ -71,7 +71,7 @@ During our mandatory Clean-Room REA & Security Audit of upstream `thecodacus/und
   - **`RSI-002`**: Zero-Copy `O(N)` 256-Bit SimHash LSH Graph Engine for `100,000+` concepts.
   - **`RSI-003`**: Autonomous Dream Gardener via `NALA-Parallax-RS (:4000)` & `USER_PROJECT_SHIELD` (`--gardener`).
   - **`RSI-004`**: Cryptographic 256-Bit Merkle `log.md` Chain & `sHeriFF` 5-Zone Tenant DLP (`--verify-merkle`).
-  - **`RSI-005`**: Lock-Free CRDT Multi-Node OKF Memory Sync (`M4 Max <-> nala-brain <-> Beelink`) (`--crdt-sync`).
+  - **`RSI-005`**: Lock-Free CRDT Multi-Node OKF Memory Sync (`M4 Max <-> nala-brain <-> nala-worker`) (`--crdt-sync`).
   - **`RSI-006`**: Sub-Millisecond 2-Hop GraphRAG Context Compiler (`--graph-rag <query>`).
   - **`RSI-007`**: Incremental Delta-Arena & Live Auto-Index Updater (`< 18 µs` SLA) (`--delta-scan`).
   - **`RSI-008`**: Encrypted-at-Rest Vault Sections (`# [VAULT:zone]`) inside OKF Markdown (`--vault-verify`).

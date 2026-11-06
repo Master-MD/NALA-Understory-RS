@@ -10,7 +10,7 @@
   - `RSI-002`: Deduplicazione `O(N)` SimHash-256 LSH su `10.000` concetti in `9.31 ms`.
   - `RSI-003`: Dream Gardener autonomo con `USER_PROJECT_SHIELD` (`134.7 µs/op`).
   - `RSI-004`: Catena Merkle a 256 bit per `log.md` e guardia DLP a 5 zone (`1.29 µs/op`).
-  - `RSI-005`: Sincronizzazione CRDT Multi-Nodo (`M4 Max <-> nala-brain <-> Beelink`, `740.5 ns/op`).
+  - `RSI-005`: Sincronizzazione CRDT Multi-Nodo (`M4 Max <-> nala-brain <-> nala-worker`, `740.5 ns/op`).
   - `RSI-006`: Compilatore di contesto GraphRAG a 2 salti (`162.3 µs/op`).
   - `RSI-007`: Aggiornamento incrementale Delta-Arena (`2.01 µs/op`).
   - `RSI-008`: Sezioni Vault crittografate `# [VAULT:zone]` (`2.36 µs/op`).

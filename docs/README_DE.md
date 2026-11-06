@@ -11,7 +11,7 @@ KI-Agenten vergessen zwischen Sitzungen alles oder halluzinieren auf veralteten 
   - **`RSI-002` 256-Bit SimHash LSH (`O(N)`)**: Findet Duplikat-Cluster über `10'000` Konzepte in `9.31 ms` (198.7x schneller als $O(N^2)$).
   - **`RSI-003` Autonomer Dream Gardener**: Nachtlauf mit `USER_PROJECT_SHIELD` und NCSP Pre-Merge Snapshot über `NALA-Parallax-RS (:4000)`.
   - **`RSI-004` 256-Bit Merkle `log.md` Chain & `sHeriFF` 5-Zonen DLP**: Manipulationssichere Hash-Kette (`1.29 µs/op`) und Mandantentrennung (`mike_privat`, `dc_gmbh`, `andrea_privat`, `shared`, `public_pearl`).
-  - **`RSI-005` Lock-Free CRDT Multi-Node Sync**: Konfliktfreier Sektions-Merge (`740.5 ns/op`) + 256-Bit Bundle-Merkle-Root über `M4 Max <-> nala-brain <-> Beelink`.
+  - **`RSI-005` Lock-Free CRDT Multi-Node Sync**: Konfliktfreier Sektions-Merge (`740.5 ns/op`) + 256-Bit Bundle-Merkle-Root über `M4 Max <-> nala-brain <-> nala-worker`.
   - **`RSI-006` Sub-Millisecond 2-Hop GraphRAG Context Compiler**: Kompiliert exakte 2-Hop Nachbarschafts-Subgraphen (`162.3 µs/op`) unter striktem Zeichen-/Token-Budget.
   - **`RSI-007` Incremental Delta-Arena (`< 18 µs` SLA)**: Erkennt und re-indexiert Einzeldatei-Änderungen via `(mtime_ns, size_bytes, fnv1a_64)` in **`2.01 µs/op`** (9x schneller als das 18 µs SLA!).
   - **`RSI-008` Encrypted-at-Rest Vault-Sektionen (`# [VAULT:zone]`)**: Authentifizierte ARX-256 + MAC Verschlüsselung (`2.36 µs/op`) sensitiver Sektionen mitten in regulären OKF-Markdown-Dateien (`ENC-OKF-V1:...`).

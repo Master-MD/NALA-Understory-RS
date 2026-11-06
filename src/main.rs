@@ -1789,7 +1789,7 @@ pub fn scan_prompt_injection_and_dlp(zone: TenantZone, content: &str) -> DlpScan
     }
 
     if zone == TenantZone::PublicPearl {
-        let pii_markers = ["zpv-nr", "756.", "vault_mike.db", "vault_andrea.db", "tenant_id = 'mike_privat'"];
+        let pii_markers = ["ssn-id", "756.", "private_vault_zone1.db", "private_vault_zone2.db", "tenant_id = 'mike_privat'"];
         for m in &pii_markers {
             if lower.contains(m) {
                 return DlpScanReport {
@@ -1889,7 +1889,7 @@ pub fn verify_merkle_log_chain(log_markdown: &str) -> (bool, usize, String) {
 // 5B. MODULE: RSI-UNDERSTORY-005..008 (Wave-2 Evolution Engine v0.3.0)
 // ============================================================================
 
-/// RSI-UNDERSTORY-005: Lock-Free CRDT Multi-Node OKF Memory Sync (M4 Max <-> nala-brain <-> Beelink)
+/// RSI-UNDERSTORY-005: Lock-Free CRDT Multi-Node OKF Memory Sync (M4 Max <-> nala-brain <-> nala-worker)
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct CrdtVectorClock {
     pub clocks: BTreeMap<String, u64>,
@@ -1900,7 +1900,7 @@ impl CrdtVectorClock {
         let mut clocks = BTreeMap::new();
         clocks.insert("m4max".to_string(), 0);
         clocks.insert("nala-brain".to_string(), 0);
-        clocks.insert("beelink-worker".to_string(), 0);
+        clocks.insert("nala-worker".to_string(), 0);
         Self { clocks }
     }
 
@@ -2758,7 +2758,7 @@ fn handle_http_client(mut stream: TcpStream, bundle: &Bundle) {
     } else if path_and_query.starts_with("/api/crdt-sync") {
         let merkle_root = compute_bundle_merkle_root(bundle);
         let json = format!(
-            "{{\"module\":\"RSI-UNDERSTORY-005\",\"nodes\":[\"m4max\",\"nala-brain\",\"beelink-worker\"],\"bundle_merkle_root\":{:?},\"conflict_free\":true}}",
+            "{{\"module\":\"RSI-UNDERSTORY-005\",\"nodes\":[\"m4max\",\"nala-brain\",\"nala-worker\"],\"bundle_merkle_root\":{:?},\"conflict_free\":true}}",
             merkle_root
         );
         ("200 OK", "application/json", json)
@@ -3077,7 +3077,7 @@ fn main() {
             let bundle = Bundle::new(&root_path);
             let root_hash = compute_bundle_merkle_root(&bundle);
             println!(
-                "{{\"module\":\"RSI-UNDERSTORY-005\",\"nodes\":[\"m4max\",\"nala-brain\",\"beelink-worker\"],\"bundle_merkle_root\":{:?},\"conflict_free\":true}}",
+                "{{\"module\":\"RSI-UNDERSTORY-005\",\"nodes\":[\"m4max\",\"nala-brain\",\"nala-worker\"],\"bundle_merkle_root\":{:?},\"conflict_free\":true}}",
                 root_hash
             );
         }
@@ -3103,7 +3103,7 @@ fn main() {
             );
         }
         "vault-verify" => {
-            let sample = "Public intro.\n\n# [VAULT:mike_privat]\nGeheime ZPV-Steuernotiz CHF 12000\n\n# Public API\nOpen section.\n";
+            let sample = "Public intro.\n\n# [VAULT:mike_privat]\nSecret Vault Financial Note CHF 12000\n\n# Public API\nOpen section.\n";
             let protected = protect_markdown_vault_sections(sample, "nala-vault-secret");
             let redacted = unlock_markdown_vault_sections(&protected, TenantZone::PublicPearl, "nala-vault-secret");
             let unlocked = unlock_markdown_vault_sections(&protected, TenantZone::MikePrivat, "nala-vault-secret");
@@ -3111,7 +3111,7 @@ fn main() {
                 "{{\"module\":\"RSI-UNDERSTORY-008\",\"encrypted_on_disk\":{},\"redacted_for_public\":{},\"unlocked_for_owner\":{}}}",
                 protected.contains("ENC-OKF-V1:mike_privat:"),
                 redacted.contains("[REDACTED:"),
-                unlocked.contains("Geheime ZPV-Steuernotiz")
+                unlocked.contains("Secret Vault Financial Note")
             );
         }
         _ => {
@@ -3326,7 +3326,7 @@ mod tests {
         assert!(!inj.allowed);
         assert!(inj.prompt_injection_detected);
 
-        let pii = scan_prompt_injection_and_dlp(TenantZone::PublicPearl, "Database path: vault_mike.db");
+        let pii = scan_prompt_injection_and_dlp(TenantZone::PublicPearl, "Database path: private_vault_zone1.db");
         assert!(!pii.allowed);
         assert!(pii.cross_tenant_pii_detected);
     }

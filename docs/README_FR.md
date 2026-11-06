@@ -10,7 +10,7 @@
   - **`RSI-002` SimHash-256 LSH (`O(N)`)** : Déduplication de `10 000` concepts en `9.31 ms`.
   - **`RSI-003` Dream Gardener (`134.7 µs/op`)** : Maintenance autonome avec `USER_PROJECT_SHIELD`.
   - **`RSI-004` Chaîne Merkle-256 `log.md` & DLP 5-Zones (`1.29 µs/op`)** : Protection anti-injection et isolation multi-locataires (`sHeriFF`).
-  - **`RSI-005` Synchronisation CRDT Multi-Nœuds (`740.5 ns/op`)** : Fusion sans conflit par section H1 entre `M4 Max <-> nala-brain <-> Beelink`.
+  - **`RSI-005` Synchronisation CRDT Multi-Nœuds (`740.5 ns/op`)** : Fusion sans conflit par section H1 entre `M4 Max <-> nala-brain <-> nala-worker`.
   - **`RSI-006` Compilateur GraphRAG 2-Sauts (`162.3 µs/op`)** : Extraction de sous-graphe filtré par zone sous budget strict de caractères.
   - **`RSI-007` Delta-Arène Incrémentale (`2.01 µs/op`)** : Mise à jour d'index en `< 18 µs` par fichier modifié.
   - **`RSI-008` Sections Coffre-Fort Chiffrées (`# [VAULT:zone]`, `2.36 µs/op`)** : Chiffrement authentifié ARX-256 + MAC dans les fichiers Markdown OKF.
