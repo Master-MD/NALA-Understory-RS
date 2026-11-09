@@ -5,7 +5,7 @@
 **A:** Nein — beide ergänzen sich perfekt! `NALA-RAG` durchsucht 50'000+ PDFs/Dokumente via Qdrant HNSW + SQLite FTS5 mit Evidence-Lock. `NALA-Understory-RS` ist das **selbstvernetzende, Git-versionierbare Arbeits- und Architektur-Gedächtnis (`OKF v0.1`)** für KI-Agenten (Konzepte, APIs, Playbooks, Runbooks, Entscheidungen).
 
 **F2: Ist `NALA-Understory-RS` zu 100% kompatibel mit Original-Understory Bundles und MCP-Clients?**  
-**A:** Ja! Alle 5 MCP-Tools (`memory_query`, `memory_add`, `memory_update`, `memory_status`, `memory_maintain`), `index.md`/`log.md`-Formate, `.traces/`-Notation und `profiles.json` (`usk_...` Keys) sind 1:1 kompatibel.
+**A:** Ja! Alle 5 Standard-MCP-Tools (`memory_query`, `memory_add`, `memory_update`, `memory_status`, `memory_maintain`) sowie die 9 NALA-Erweiterungs-Tools (`memory_rag_sync`, `memory_merkle_verify`, `memory_crdt_sync`, `memory_graph_rag`, `memory_vault_inspect`, `memory_ngram_draft`, `memory_git_harvest`, `memory_time_travel`, `memory_demopod_export` — insgesamt `14` MCP-Tools), `index.md`/`log.md`-Formate, `.traces/`-Notation und `profiles.json` (`usk_...` Keys) sind 1:1 kompatibel.
 
 **F3: Welche Sicherheitslücken aus dem Original wurden behoben?**  
 **A:** `SEC-UNDERSTORY-01` (`cors({ origin: true })` + `0.0.0.0:3800` ohne Token blockiert jetzt fremde Browser-Origins via striktem CSRF-Guard auf `127.0.0.1:3800`), `SEC-UNDERSTORY-02` (kein `git safe.directory '*'` Subprozess mehr) und `SEC-UNDERSTORY-03` (kein `gray-matter` JavaScript-Eval mehr + kanonischer Symlink-Schutz).
