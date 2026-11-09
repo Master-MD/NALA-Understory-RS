@@ -1,13 +1,13 @@
 #!/usr/bin/env sh
 # ============================================================================
-# 🌱🦀 NALA-Understory-RS v0.5.0-nala.6.6.6 — Universal Installer (macOS & Linux)
+# 🌱🦀 NALA-Understory-RS v0.6.0-nala.6.6.6 — Universal Installer (macOS & Linux)
 # Supports: DE / FR / IT / RM / EN | Architectures: arm64 / aarch64 / x86_64
 # 100% Standalone (Works WITH or WITHOUT NALA-OS) + Cryptographic SHA-256 Check
 # ============================================================================
 set -eu
 
 REPO="Master-MD/NALA-Understory-RS"
-VERSION="${NALA_UNDERSTORY_VERSION:-v0.5.0-nala.6.6.6}"
+VERSION="${NALA_UNDERSTORY_VERSION:-v0.6.0-nala.6.6.6}"
 INSTALL_DIR="${NALA_INSTALL_DIR:-$HOME/bin}"
 
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
