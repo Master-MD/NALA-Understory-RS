@@ -1,20 +1,9 @@
-# 🏔️ NALA-Understory-RS (`v0.6.0-nala.6.6.6`) — Documentaziun Rumantscha (RM)
+# 🏔️ NALA-Understory-RS (`v0.7.0-nala.6.6.6`) — Documentaziun Rumantscha (RM)
 
-> **Port 100% Rust Nativ (`Edition 2024`, Zero Node.js, Zero Python, Zero Telemetria, 100% Standalone Universal) ed Evoluziun Undas 1–5 (`RSI-UNDERSTORY-001..020`) da [`thecodacus/understory`](https://github.com/thecodacus/understory)**
+> **Motor 100% Rust Nativ (`Edition 2024`, Nagin Node.js, Nagin Python, `0` Crates Externs, 100% Standalone & Ibrid) per [`thecodacus/understory`](https://github.com/thecodacus/understory) (`OKF v0.1`)**
 
-## 1. Survesta (`v0.6.0-nala.6.6.6`)
-**NALA-Understory-RS (`v0.6.0-nala.6.6.6`)** transfurma in ordinatur da datotecas Markdown (**OKF v0.1**) en ina memoria d'agent auto-colliada che funcziuna a 100% independentamain sin macOS, Linux e Windows:
-- **`RSI-001..016` (Undas 1–4)**: Evidence-Lock, SimHash-256 LSH, Dream Gardener, chadaina Merkle-256 + DLP da 5 zonas (`vault_primary..public_pearl`), CRDT Multi-Noda (`node-alpha..node-gamma`), GraphRAG, Delta-Arena, `# [VAULT:zone]`, N-Gram, Git-Harvest, Time-Travel, DemoPod, `.okf.idx`, lease multi-agent, GraphRAG federà ed attestatur da citaziuns.
-- **`RSI-017..020` (Unda 5)**: Tschertga booleana cun bitmaps invertidas a 64 bits `.okf.bm` (`--bitmap-search`, `< 950 ns`), importatur static SQL DDL / OpenAPI / Protobuf (`--import-schema`, `< 1.8 ms`), optimisatur Knapsack dal budget (`--budget-pack`, `< 35 µs`) e sigil FIPS 180-4 SHA-256 `OKF_BUNDLE_SEAL.json` (`--seal-bundle`, `< 2.4 ms`).
-
-## 2. Cumenzament Spert (`22` Utensils MCP & `26` Benchmarks)
-```bash
-nala-understory-rs --standalone-check
-nala-understory-rs --self-hash
-nala-understory-rs --bench
-nala-understory-rs --bitmap-search customer
-nala-understory-rs --import-schema
-nala-understory-rs --budget-pack "billing"
-nala-understory-rs --seal-bundle
-nala-understory-rs --serve 127.0.0.1:3800
-```
+## Novitads `v0.7.0-nala.6.6.6` (`RSI-001..024` · `27` Utensils MCP · `30` Tests Unitars)
+- **`RSI-021` (`--rewrite-links` / `memory_rewrite_links`)**: Fusiun atomica da duplicats e rescrittira automatica da tut ils backlinks (`#56` & `#40`, `0` colliaziuns ruttas).
+- **`RSI-022` (`--patch-section` / `memory_patch_section`)**: Sanificaziun automatica dal frontmatter YAML/JSON per models locals (`#33`) e remplazzament da secziuns `H1`–`H6` (`#34`, `#52`, `#53`).
+- **`RSI-023` (`--bm25-query` / `memory_query` / `memory_seed`)**: Tschertga ibrida BM25/IDF + 1-Hop Link Boost (`#51`, `#54`, `#60`) e schemas MCP statics (`listChanged: false`) che protegian il prompt-cache (`#58`).
+- **`RSI-024` (`--snapshot` / `--restore-snapshot` / `PUT /api/concept`)**: Snapshots atomics SHA-256 en `.okf_snapshots/` (`#59`) ed editur Markdown inline en il Web Studio (`#23`).

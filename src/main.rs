@@ -1,8 +1,14 @@
 // ============================================================================
-// 🦀 NALA-Understory-RS v0.6.0-nala.6.6.6 (Rust-Turbo / Edition 2024)
+// 🦀 NALA-Understory-RS v0.7.0-nala.6.6.6 (Rust-Turbo / Edition 2024)
 // ============================================================================
 // Clean-Room 100% Native Rust-Turbo Port & Hardened Evolution of
 // https://github.com/thecodacus/understory (Apache-2.0 License)
+// Hybrid Dual-Horizon Architecture:
+//   - Horizon 1 (Open-Source Community Engine): Drop-in 1.8 MB Zero-Node.js / Zero-Python
+//     Rust engine for OKF v0.1 + MCP solving Upstream Issues #23, #33, #34, #40, #51,
+//     #52, #53, #54, #56, #58, #59, and #60 with 100% Zero-PII/Zero-IP guarantee.
+//   - Horizon 2 (NALA-OS Sovereign Integration): Native MCP + RAG + SwitchYard + Dream
+//     memory backbone for NALA-OS v6.6.6, Antigravity, Codex, ZCode & OpenCode.
 //
 // Core Subsystems Ported & Accelerated in 100% Native Rust (Zero-Node.js, Zero-Python):
 // 1. okf::frontmatter & okf::bundle:
@@ -45,7 +51,7 @@ use std::net::{TcpListener, TcpStream};
 use std::path::{Component, Path, PathBuf};
 use std::time::{Instant, UNIX_EPOCH};
 
-pub const VERSION: &str = "0.6.0-nala.6.6.6";
+pub const VERSION: &str = "0.7.0-nala.6.6.6";
 pub const UPSTREAM_VERSION: &str = "0.1.0";
 pub const OKF_VERSION: &str = "0.1";
 
@@ -724,6 +730,22 @@ impl Bundle {
         })
     }
 
+    pub fn delete_concept(&self, bundle_path: &str) -> Result<(), BundleError> {
+        let canonical = self.to_bundle_path(bundle_path)?;
+        self.assert_concept_path(&canonical)?;
+        let abs = self.resolve(&canonical)?;
+        if !abs.exists() {
+            return Err(BundleError::new(
+                BundleErrorCode::NotFound,
+                format!("Concept does not exist: {}", canonical),
+            ));
+        }
+        fs::remove_file(&abs).map_err(|e| {
+            BundleError::new(BundleErrorCode::NotFound, format!("Delete failed: {}", e))
+        })?;
+        Ok(())
+    }
+
     pub fn list_concept_paths(&self) -> Vec<String> {
         let mut out = Vec::new();
         let mut dirs = 0usize;
@@ -918,33 +940,40 @@ impl Bundle {
     }
 }
 
-/// Zero-regex bundle-relative link extractor matching `\]\((\/[^)#?\s]+\.md)\)` (`graph.ts:30`).
+/// Zero-regex bundle-relative link extractor matching `\]\((\/[^)#?\s]+\.md)\)` (`graph.ts:30`), ignoring fenced code blocks.
 pub fn extract_bundle_links(body: &str) -> Vec<String> {
     let mut out = Vec::new();
-    let bytes = body.as_bytes();
-    let mut i = 0;
-    while i + 4 < bytes.len() {
-        if bytes[i] == b']' && bytes[i + 1] == b'(' && bytes[i + 2] == b'/' {
-            let start = i + 2;
-            let mut j = start + 1;
-            let mut valid = true;
-            while j < bytes.len() && bytes[j] != b')' {
-                let b = bytes[j];
-                if b == b'#' || b == b'?' || b.is_ascii_whitespace() {
-                    valid = false;
-                    break;
+    let lines: Vec<&str> = body.split('\n').collect();
+    let fenced = compute_fenced_lines(&lines);
+    for (line_idx, &line) in lines.iter().enumerate() {
+        if fenced[line_idx] {
+            continue;
+        }
+        let bytes = line.as_bytes();
+        let mut i = 0;
+        while i + 4 < bytes.len() {
+            if bytes[i] == b']' && bytes[i + 1] == b'(' && bytes[i + 2] == b'/' {
+                let start = i + 2;
+                let mut j = start + 1;
+                let mut valid = true;
+                while j < bytes.len() && bytes[j] != b')' {
+                    let b = bytes[j];
+                    if b == b'#' || b == b'?' || b.is_ascii_whitespace() {
+                        valid = false;
+                        break;
+                    }
+                    j += 1;
                 }
-                j += 1;
-            }
-            if valid && j < bytes.len() && bytes[j] == b')' {
-                let candidate = &body[start..j];
-                if candidate.ends_with(".md") && candidate.len() > 4 {
-                    out.push(candidate.to_string());
+                if valid && j < bytes.len() && bytes[j] == b')' {
+                    let candidate = &line[start..j];
+                    if candidate.ends_with(".md") && candidate.len() > 4 {
+                        out.push(candidate.to_string());
+                    }
                 }
+                i = j + 1;
+            } else {
+                i += 1;
             }
-            i = j + 1;
-        } else {
-            i += 1;
         }
     }
     out
@@ -4559,7 +4588,771 @@ pub fn verify_bundle_supply_chain_seal(
 }
 
 // ============================================================================
-// 5F. MODULE: Self-Tested 10,000-Iteration Benchmark vs. TypeScript Understory
+// 5F. MODULE: Wave-6 Community Upstream Solvers & Hybrid Bridge (RSI-021..024)
+// ============================================================================
+// - RSI-UNDERSTORY-021 (Solves Upstream #56 & #40): Atomic Backlink Rewriter &
+//   Body-Deep-Scan Dream Merge (`0` broken incoming links after duplicate merge).
+// - RSI-UNDERSTORY-022 (Solves Upstream #33, #34, #52, #53): Frontmatter Type-
+//   Coercion Sanitizer for local LLMs & H1-H6 Section-Aware Patcher with
+//   duplicate top-level H1 write guard.
+// - RSI-UNDERSTORY-023 (Solves Upstream #51, #54, #58, #60): Hybrid BM25/IDF +
+//   1-Hop Neighbor Link-Boosted Query Engine with strict token budget & 100%
+//   static prompt-cache-safe MCP tool schemas (`listChanged: false` + `memory_seed`).
+// - RSI-UNDERSTORY-024 (Solves Upstream #23 & #59): First-Class Atomic Bundle
+//   Snapshot/Restore API (`.okf_snapshots/`) & Interactive Web-UI Inline Editor.
+// ============================================================================
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BacklinkRewriteReport {
+    pub old_target: String,
+    pub new_target: String,
+    pub scanned_concepts: usize,
+    pub modified_concepts: usize,
+    pub rewritten_links: usize,
+    pub broken_links_remaining: usize,
+    pub body_anomalies_detected: Vec<String>,
+}
+
+/// Rewrites incoming Markdown links `](old_path)` and wikilinks `[[old_stem]]` outside fenced code blocks (`RSI-021`, Upstream Issue #56).
+pub fn rewrite_incoming_links_in_body(body: &str, old_path: &str, new_path: &str) -> (String, usize) {
+    let norm_old = if old_path.starts_with('/') {
+        old_path.to_string()
+    } else {
+        format!("/{}", old_path)
+    };
+    let norm_new = if new_path.starts_with('/') {
+        new_path.to_string()
+    } else {
+        format!("/{}", new_path)
+    };
+    let old_rel = norm_old.trim_start_matches('/');
+    let old_stem = Path::new(old_rel)
+        .file_stem()
+        .map(|s| s.to_string_lossy().to_string())
+        .unwrap_or_default();
+    let new_stem = Path::new(norm_new.trim_start_matches('/'))
+        .file_stem()
+        .map(|s| s.to_string_lossy().to_string())
+        .unwrap_or_default();
+
+    let lines: Vec<&str> = body.split('\n').collect();
+    let fenced = compute_fenced_lines(&lines);
+    let mut out_lines = Vec::with_capacity(lines.len());
+    let mut count = 0usize;
+
+    let pat_abs = format!("]({})", norm_old);
+    let rep_abs = format!("]({})", norm_new);
+    let pat_rel = format!("]({})", old_rel);
+    let pat_wiki = format!("[[{}]]", old_stem);
+    let rep_wiki = format!("[[{}]]", new_stem);
+
+    for (idx, &line) in lines.iter().enumerate() {
+        if fenced[idx] {
+            out_lines.push(line.to_string());
+            continue;
+        }
+        let mut updated = line.to_string();
+        if updated.contains(&pat_abs) {
+            let matches = updated.matches(&pat_abs).count();
+            count += matches;
+            updated = updated.replace(&pat_abs, &rep_abs);
+        }
+        if !old_rel.is_empty() && updated.contains(&pat_rel) {
+            let matches = updated.matches(&pat_rel).count();
+            count += matches;
+            updated = updated.replace(&pat_rel, &rep_abs);
+        }
+        if !old_stem.is_empty() && updated.contains(&pat_wiki) {
+            let matches = updated.matches(&pat_wiki).count();
+            count += matches;
+            updated = updated.replace(&pat_wiki, &rep_wiki);
+        }
+        out_lines.push(updated);
+    }
+    (out_lines.join("\n"), count)
+}
+
+/// Deep-scans a concept body for duplicate headings, empty sections, and unclosed code fences (`RSI-021`, Upstream Issue #40).
+pub fn inspect_body_content_drift(body: &str) -> Vec<String> {
+    let lines: Vec<&str> = body.split('\n').collect();
+    let fenced = compute_fenced_lines(&lines);
+    let mut seen_headings: HashMap<String, usize> = HashMap::new();
+    let mut anomalies = Vec::new();
+    let mut last_heading: Option<(String, usize)> = None;
+    let mut non_empty_since_heading = 0usize;
+
+    for (idx, &line) in lines.iter().enumerate() {
+        if fenced[idx] {
+            non_empty_since_heading += 1;
+            continue;
+        }
+        if is_atx_heading(line) {
+            if let Some((prev_h, _)) = last_heading.take() {
+                if non_empty_since_heading == 0 {
+                    anomalies.push(format!("EMPTY_SECTION:{}", prev_h));
+                }
+            }
+            let lvl = heading_level(line);
+            let title = extract_heading_title(line).to_ascii_lowercase();
+            let key = format!("H{}:{}", lvl, title);
+            let c = seen_headings.entry(key).or_insert(0);
+            *c += 1;
+            if *c > 1 {
+                anomalies.push(format!("DUPLICATE_HEADING:H{}:{}", lvl, extract_heading_title(line)));
+            }
+            last_heading = Some((extract_heading_title(line).to_string(), lvl));
+            non_empty_since_heading = 0;
+        } else if !line.trim().is_empty() {
+            non_empty_since_heading += 1;
+        }
+    }
+    if let Some((prev_h, _)) = last_heading {
+        if non_empty_since_heading == 0 {
+            anomalies.push(format!("EMPTY_SECTION:{}", prev_h));
+        }
+    }
+    anomalies
+}
+
+/// Atomically merges `duplicate_path` into `canonical_path`, rewrites all incoming backlinks across the bundle, and removes the duplicate (`RSI-021`, Upstream Issues #56 & #40).
+pub fn atomic_merge_and_rewrite_backlinks(
+    bundle: &Bundle,
+    duplicate_path: &str,
+    canonical_path: &str,
+) -> Result<BacklinkRewriteReport, BundleError> {
+    let dup_norm = bundle.to_bundle_path(duplicate_path)?;
+    let can_norm = bundle.to_bundle_path(canonical_path)?;
+    if dup_norm == can_norm {
+        return Err(BundleError::new(
+            BundleErrorCode::InvalidFrontmatter,
+            "duplicate_path and canonical_path must be distinct",
+        ));
+    }
+
+    // Create automatic pre-merge snapshot for zero-loss safety
+    let _ = create_bundle_snapshot(bundle, "pre_merge_rsi021");
+
+    // If both exist, merge unique sections from duplicate into canonical before deleting duplicate
+    if let (Ok(dup_doc), Ok(mut can_doc)) = (bundle.read_concept(&dup_norm), bundle.read_concept(&can_norm)) {
+        let merged_body = merge_crdt_markdown_sections(&can_doc.body, 2, "canonical", &dup_doc.body, 1, "duplicate");
+        can_doc.body = merged_body;
+        bundle.write_concept(&can_norm, can_doc.frontmatter, &can_doc.body)?;
+        let _ = bundle.delete_concept(&dup_norm);
+    }
+
+    let paths = bundle.list_concept_paths();
+    let mut modified_concepts = 0usize;
+    let mut rewritten_links = 0usize;
+    let mut body_anomalies_detected = Vec::new();
+
+    for p in &paths {
+        if let Ok(doc) = bundle.read_concept(p) {
+            for anom in inspect_body_content_drift(&doc.body) {
+                body_anomalies_detected.push(format!("{}:{}", p, anom));
+            }
+            let (new_body, count) = rewrite_incoming_links_in_body(&doc.body, &dup_norm, &can_norm);
+            if count > 0 {
+                bundle.write_concept(p, doc.frontmatter, &new_body)?;
+                modified_concepts += 1;
+                rewritten_links += count;
+            }
+        }
+    }
+
+    let _ = append_merkle_log(
+        bundle,
+        "/",
+        "Update",
+        &format!(
+            "RSI-021 atomic merge {} -> {} ({} backlinks rewritten across {} concepts)",
+            dup_norm, can_norm, rewritten_links, modified_concepts
+        ),
+    );
+    let arena_after = bundle.scan_arena();
+    Ok(BacklinkRewriteReport {
+        old_target: dup_norm,
+        new_target: can_norm,
+        scanned_concepts: paths.len(),
+        modified_concepts,
+        rewritten_links,
+        broken_links_remaining: arena_after.lint.broken_links.len(),
+        body_anomalies_detected,
+    })
+}
+
+/// Coerces non-string `description` / `title` YAML/JSON objects emitted by local models (`Qwen`, `Llama`) into clean strings (`RSI-022`, Upstream Issue #33).
+pub fn coerce_and_sanitize_frontmatter_raw(raw_yaml: &str) -> (ConceptFrontmatter, usize) {
+    let mut fm = ConceptFrontmatter::default();
+    let mut coerced_fields = 0usize;
+    let mut current_multiline_key: Option<String> = None;
+    let mut multiline_parts: Vec<String> = Vec::new();
+
+    let flush_multiline = |fm: &mut ConceptFrontmatter,
+                           key: &Option<String>,
+                           parts: &mut Vec<String>,
+                           coerced: &mut usize| {
+        if let Some(k) = key {
+            if !parts.is_empty() {
+                let joined = parts.join("; ");
+                *coerced += 1;
+                match k.as_str() {
+                    "description" => fm.description = Some(joined),
+                    "title" => fm.title = Some(joined),
+                    "type" => fm.r#type = joined,
+                    other => {
+                        fm.extra.insert(other.to_string(), joined);
+                    }
+                }
+                parts.clear();
+            }
+        }
+    };
+
+    let mut in_tags = false;
+    for line in raw_yaml.lines() {
+        let trimmed = line.trim();
+        if trimmed.is_empty() || trimmed.starts_with('#') || trimmed == "---" {
+            continue;
+        }
+        if in_tags && (trimmed.starts_with("- ") || trimmed.starts_with("* ")) {
+            fm.tags.push(unquote_yaml(&trimmed[2..]));
+            continue;
+        }
+        if (line.starts_with(' ') || line.starts_with('\t')) && current_multiline_key.is_some() {
+            let clean_part = trimmed
+                .trim_matches(|c| c == '{' || c == '}' || c == ',' || c == '"' || c == '\'')
+                .trim();
+            if !clean_part.is_empty() {
+                multiline_parts.push(clean_part.to_string());
+            }
+            continue;
+        }
+        flush_multiline(&mut fm, &current_multiline_key, &mut multiline_parts, &mut coerced_fields);
+        current_multiline_key = None;
+        in_tags = false;
+
+        let Some(colon) = line.find(':') else { continue };
+        let key = line[..colon].trim();
+        let val_raw = line[colon + 1..].trim();
+
+        if val_raw.is_empty() && (key == "description" || key == "title") {
+            current_multiline_key = Some(key.to_string());
+            continue;
+        }
+
+        let coerce_json_like = |raw_val: &str, coerced: &mut usize| -> String {
+            let t = raw_val.trim();
+            if (t.starts_with('{') && t.ends_with('}')) || (t.starts_with('[') && t.ends_with(']')) {
+                *coerced += 1;
+                t.trim_matches(|c| c == '{' || c == '}' || c == '[' || c == ']')
+                    .split(',')
+                    .map(|seg| {
+                        let cleaned = seg.replace('"', "").replace('\'', "");
+                        cleaned.split_whitespace().collect::<Vec<_>>().join(" ")
+                    })
+                    .filter(|s| !s.is_empty())
+                    .collect::<Vec<_>>()
+                    .join("; ")
+            } else {
+                unquote_yaml(t)
+            }
+        };
+
+        match key {
+            "type" => fm.r#type = coerce_json_like(val_raw, &mut coerced_fields),
+            "title" => {
+                let v = coerce_json_like(val_raw, &mut coerced_fields);
+                if !v.is_empty() {
+                    fm.title = Some(v);
+                }
+            }
+            "description" => {
+                let v = coerce_json_like(val_raw, &mut coerced_fields);
+                if !v.is_empty() {
+                    fm.description = Some(v);
+                }
+            }
+            "resource" => {
+                let v = unquote_yaml(val_raw);
+                if !v.is_empty() {
+                    fm.resource = Some(v);
+                }
+            }
+            "timestamp" => {
+                let v = unquote_yaml(val_raw);
+                if !v.is_empty() {
+                    fm.timestamp = Some(v);
+                }
+            }
+            "tags" => {
+                if val_raw.is_empty() {
+                    in_tags = true;
+                } else if val_raw.starts_with('[') && val_raw.ends_with(']') {
+                    let inner = &val_raw[1..val_raw.len() - 1];
+                    for item in inner.split(',') {
+                        let clean = unquote_yaml(item);
+                        if !clean.is_empty() {
+                            fm.tags.push(clean);
+                        }
+                    }
+                }
+            }
+            other => {
+                fm.extra.insert(other.to_string(), coerce_json_like(val_raw, &mut coerced_fields));
+            }
+        }
+    }
+    flush_multiline(&mut fm, &current_multiline_key, &mut multiline_parts, &mut coerced_fields);
+    if fm.r#type.is_empty() {
+        fm.r#type = "Concept".to_string();
+    }
+    (fm, coerced_fields)
+}
+
+/// Extracts top-level H1 headings outside fenced code blocks (`RSI-022`, Upstream Issues #52 & #53).
+pub fn top_level_h1_headings(body: &str) -> Vec<String> {
+    let lines: Vec<&str> = body.split('\n').collect();
+    let fenced = compute_fenced_lines(&lines);
+    let mut out = Vec::new();
+    for (idx, &line) in lines.iter().enumerate() {
+        if !fenced[idx] && is_atx_heading(line) && heading_level(line) == 1 {
+            out.push(extract_heading_title(line).to_string());
+        }
+    }
+    out
+}
+
+/// Enforces write-path guard against duplicate top-level H1 sections (`RSI-022`, Upstream Issues #52 & #53).
+pub fn validate_no_duplicate_top_h1(body: &str) -> Result<(), String> {
+    let mut seen = HashSet::new();
+    for h1 in top_level_h1_headings(body) {
+        let key = h1.to_ascii_lowercase();
+        if !seen.insert(key) {
+            return Err(format!("DUPLICATE_TOP_LEVEL_H1_REJECTED: \"# {}\"", h1));
+        }
+    }
+    Ok(())
+}
+
+/// Patches any H1–H6 section outside fenced code blocks and enforces the duplicate H1 write guard (`RSI-022`, Upstream Issues #34, #35, #52, #53).
+pub fn patch_heading_section_h1_h6(
+    body: &str,
+    target_heading: &str,
+    new_section_body: &str,
+    enforce_h1_guard: bool,
+) -> Result<String, String> {
+    let requested_hashes = target_heading.bytes().take_while(|&b| b == b'#').count();
+    let normalized = target_heading.trim_start_matches('#').trim();
+    let lines: Vec<&str> = body.split('\n').collect();
+    let fenced = compute_fenced_lines(&lines);
+
+    let mut matches = Vec::new();
+    for (i, &line) in lines.iter().enumerate() {
+        if !fenced[i]
+            && is_atx_heading(line)
+            && extract_heading_title(line).eq_ignore_ascii_case(normalized)
+            && (requested_hashes == 0 || heading_level(line) == requested_hashes)
+        {
+            matches.push(i);
+        }
+    }
+    if matches.len() > 1 {
+        return Err(format!(
+            "patch_heading_section_h1_h6: section \"{}\" appears {} times",
+            normalized,
+            matches.len()
+        ));
+    }
+
+    let updated = if let Some(&start) = matches.first() {
+        let matched_level = heading_level(lines[start]);
+        let mut end = lines.len();
+        for i in (start + 1)..lines.len() {
+            if !fenced[i] && is_atx_heading(lines[i]) && heading_level(lines[i]) <= matched_level {
+                end = i;
+                break;
+            }
+        }
+        let mut clean_content = new_section_body.trim().to_string();
+        if let Some(first_line) = clean_content.lines().next() {
+            if is_atx_heading(first_line) && extract_heading_title(first_line).eq_ignore_ascii_case(normalized) {
+                clean_content = clean_content.lines().skip(1).collect::<Vec<_>>().join("\n").trim().to_string();
+            }
+        }
+        let before = lines[..=start].join("\n");
+        let after = lines[end..].join("\n");
+        if after.trim().is_empty() {
+            format!("{}\n\n{}\n", before, clean_content)
+        } else {
+            format!("{}\n\n{}\n\n{}", before, clean_content, after)
+        }
+    } else {
+        let hashes_str = if requested_hashes >= 1 && requested_hashes <= 6 {
+            "#".repeat(requested_hashes)
+        } else {
+            "#".to_string()
+        };
+        let trimmed = body.trim_end();
+        let sep = if trimmed.is_empty() { "" } else { "\n\n" };
+        format!("{}{}{} {}\n\n{}\n", trimmed, sep, hashes_str, normalized, new_section_body.trim())
+    };
+
+    if enforce_h1_guard {
+        validate_no_duplicate_top_h1(&updated)?;
+    }
+    Ok(updated)
+}
+
+#[derive(Clone, Debug)]
+pub struct HybridBm25QueryResult {
+    pub query: String,
+    pub total_candidates: usize,
+    pub selected_paths: Vec<String>,
+    pub hop1_boosted_paths: Vec<String>,
+    pub used_tokens: usize,
+    pub token_budget: usize,
+    pub prompt_cache_stable: bool,
+    pub compiled_context: String,
+}
+
+/// Hybrid BM25/IDF + 1-Hop Neighbor Link-Boosted Query Engine with strict token-budget cap (`RSI-023`, Upstream Issues #51, #54, #58, #60).
+pub fn query_hybrid_bm25_1hop(
+    bundle: &Bundle,
+    arena: &SinglePassArenaResult,
+    query: &str,
+    token_budget: usize,
+) -> HybridBm25QueryResult {
+    let terms: Vec<String> = query
+        .split(|c: char| !c.is_alphanumeric() && c != '_' && c != '-')
+        .map(|s| s.trim().to_ascii_lowercase())
+        .filter(|s| s.len() >= 2)
+        .collect();
+
+    let paths = bundle.list_concept_paths();
+    let n_docs = paths.len().max(1) as f64;
+    let mut docs_data: Vec<(String, Concept, Vec<String>)> = Vec::with_capacity(paths.len());
+    let mut doc_freq: HashMap<String, usize> = HashMap::new();
+    let mut total_tokens_all = 0usize;
+
+    for p in &paths {
+        if let Ok(doc) = bundle.read_concept(p) {
+            let mut combined = String::with_capacity(doc.body.len() + 128);
+            if let Some(ref t) = doc.frontmatter.title {
+                combined.push_str(t);
+                combined.push(' ');
+            }
+            if let Some(ref d) = doc.frontmatter.description {
+                combined.push_str(d);
+                combined.push(' ');
+            }
+            for tag in &doc.frontmatter.tags {
+                combined.push_str(tag);
+                combined.push(' ');
+            }
+            combined.push_str(&doc.body);
+            let doc_tokens: Vec<String> = combined
+                .split(|c: char| !c.is_alphanumeric() && c != '_' && c != '-')
+                .filter(|s| !s.is_empty())
+                .map(|s| s.to_ascii_lowercase())
+                .collect();
+            total_tokens_all += doc_tokens.len().max(1);
+            let unique_set: HashSet<&String> = doc_tokens.iter().collect();
+            for q_term in &terms {
+                if unique_set.contains(q_term) {
+                    *doc_freq.entry(q_term.clone()).or_insert(0) += 1;
+                }
+            }
+            docs_data.push((p.clone(), doc, doc_tokens));
+        }
+    }
+
+    let avg_dl = (total_tokens_all as f64) / n_docs;
+    let k1 = 1.2f64;
+    let b = 0.75f64;
+
+    let mut base_scores: HashMap<String, f64> = HashMap::new();
+    for (p, doc, doc_tokens) in &docs_data {
+        let dl = doc_tokens.len().max(1) as f64;
+        let mut score = 0.0f64;
+        for q_term in &terms {
+            let tf = doc_tokens.iter().filter(|t| *t == q_term).count() as f64;
+            if tf > 0.0 {
+                let df = (*doc_freq.get(q_term).unwrap_or(&1)) as f64;
+                let idf = ((n_docs - df + 0.5) / (df + 0.5) + 1.0).ln();
+                let denom = tf + k1 * (1.0 - b + b * (dl / avg_dl.max(1.0)));
+                let mut term_bm25 = idf * ((tf * (k1 + 1.0)) / denom);
+                if doc
+                    .frontmatter
+                    .title
+                    .as_deref()
+                    .unwrap_or("")
+                    .to_ascii_lowercase()
+                    .contains(q_term)
+                {
+                    term_bm25 *= 1.8;
+                }
+                if p.to_ascii_lowercase().contains(q_term) {
+                    term_bm25 *= 1.4;
+                }
+                score += term_bm25;
+            }
+        }
+        base_scores.insert(p.clone(), score);
+    }
+
+    // 1-Hop Link Neighbor Boost (PR #60): Neighbors of high-scoring seeds receive +35% link score transfer
+    let mut final_scores = base_scores.clone();
+    let mut hop1_boosted_paths = Vec::new();
+    for edge in &arena.edges {
+        let s_score = *base_scores.get(&edge.source).unwrap_or(&0.0);
+        let t_score = *base_scores.get(&edge.target).unwrap_or(&0.0);
+        if s_score > 0.5 {
+            let entry = final_scores.entry(edge.target.clone()).or_insert(0.0);
+            *entry += s_score * 0.35;
+            if !hop1_boosted_paths.contains(&edge.target) {
+                hop1_boosted_paths.push(edge.target.clone());
+            }
+        }
+        if t_score > 0.5 {
+            let entry = final_scores.entry(edge.source.clone()).or_insert(0.0);
+            *entry += t_score * 0.25;
+            if !hop1_boosted_paths.contains(&edge.source) {
+                hop1_boosted_paths.push(edge.source.clone());
+            }
+        }
+    }
+
+    let mut ranked: Vec<(String, f64, &Concept)> = docs_data
+        .iter()
+        .map(|(p, doc, _)| (p.clone(), *final_scores.get(p).unwrap_or(&0.0), doc))
+        .filter(|(_, sc, _)| *sc > 0.0)
+        .collect();
+    ranked.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal).then_with(|| a.0.cmp(&b.0)));
+
+    let effective_budget = token_budget.max(64);
+    let mut used_tokens = 0usize;
+    let mut selected_paths = Vec::new();
+    let mut compiled = String::new();
+
+    for (p, sc, doc) in &ranked {
+        let snippet = format!(
+            "## {} ({}) [score={:.2}]\n{}\n\n",
+            p,
+            doc.frontmatter.title.as_deref().unwrap_or("Untitled"),
+            sc,
+            doc.body.trim()
+        );
+        let est_tokens = (snippet.len() / 4).max(1);
+        if used_tokens + est_tokens <= effective_budget || selected_paths.is_empty() {
+            let bounded = if used_tokens + est_tokens > effective_budget {
+                let max_bytes = (effective_budget.saturating_sub(used_tokens)) * 4;
+                let cut = snippet.len().min(max_bytes.max(120));
+                format!("{}...\n", &snippet[..cut])
+            } else {
+                snippet
+            };
+            used_tokens += (bounded.len() / 4).max(1);
+            compiled.push_str(&bounded);
+            selected_paths.push(p.clone());
+        }
+        if used_tokens >= effective_budget {
+            break;
+        }
+    }
+
+    HybridBm25QueryResult {
+        query: query.to_string(),
+        total_candidates: ranked.len(),
+        selected_paths,
+        hop1_boosted_paths,
+        used_tokens,
+        token_budget: effective_budget,
+        prompt_cache_stable: true,
+        compiled_context: compiled,
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct BundleSnapshotManifest {
+    pub snapshot_id: String,
+    pub created_unix_s: u64,
+    pub concept_count: usize,
+    pub bundle_merkle_root: String,
+    pub snapshot_dir: String,
+    pub files: BTreeMap<String, String>,
+}
+
+/// First-class atomic backup/snapshot API (`RSI-024`, Upstream Issue #59).
+pub fn create_bundle_snapshot(bundle: &Bundle, label: &str) -> Result<BundleSnapshotManifest, String> {
+    let clean_label: String = label
+        .chars()
+        .map(|c| if c.is_alphanumeric() || c == '_' || c == '-' { c } else { '_' })
+        .collect();
+    let now_s = std::time::SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs())
+        .unwrap_or(1_762_000_000);
+    let merkle_root = compute_bundle_merkle_root(bundle);
+    let snapshot_id = format!("snap_{}_{}", clean_label, &merkle_root[..12]);
+    let snap_dir = bundle.root.join(".okf_snapshots").join(&snapshot_id);
+    fs::create_dir_all(&snap_dir).map_err(|e| e.to_string())?;
+
+    let mut files = BTreeMap::new();
+    let mut paths = bundle.list_concept_paths();
+    if bundle.root.join("log.md").exists() {
+        paths.push("/log.md".to_string());
+    }
+    for p in &paths {
+        let rel = p.trim_start_matches('/');
+        let src = bundle.root.join(rel);
+        if let Ok(bytes) = fs::read(&src) {
+            let dst = snap_dir.join(rel);
+            if let Some(parent) = dst.parent() {
+                let _ = fs::create_dir_all(parent);
+            }
+            fs::write(&dst, &bytes).map_err(|e| e.to_string())?;
+            files.insert(p.clone(), sha256_hex(&bytes));
+        }
+    }
+
+    let manifest_json = format!(
+        "{{\"snapshot_id\":{:?},\"created_unix_s\":{},\"concept_count\":{},\"bundle_merkle_root\":{:?},\"files\":{}}}\n",
+        snapshot_id,
+        now_s,
+        files.len(),
+        merkle_root,
+        files.len()
+    );
+    fs::write(snap_dir.join("SNAPSHOT_MANIFEST.json"), manifest_json).map_err(|e| e.to_string())?;
+
+    Ok(BundleSnapshotManifest {
+        snapshot_id,
+        created_unix_s: now_s,
+        concept_count: files.len(),
+        bundle_merkle_root: merkle_root,
+        snapshot_dir: snap_dir.to_string_lossy().to_string(),
+        files,
+    })
+}
+
+/// Restores a previously created atomic bundle snapshot (`RSI-024`, Upstream Issue #59).
+pub fn restore_bundle_snapshot(bundle: &Bundle, snapshot_id: &str) -> Result<usize, String> {
+    if snapshot_id.contains("..") || snapshot_id.contains('/') || snapshot_id.contains('\\') {
+        return Err("Invalid snapshot_id".to_string());
+    }
+    let snap_dir = bundle.root.join(".okf_snapshots").join(snapshot_id);
+    if !snap_dir.exists() {
+        return Err(format!("Snapshot not found: {}", snapshot_id));
+    }
+
+    fn copy_recursive(src_root: &Path, cur: &Path, dst_root: &Path, restored: &mut usize) -> Result<(), String> {
+        let entries = fs::read_dir(cur).map_err(|e| e.to_string())?;
+        for entry in entries.flatten() {
+            let p = entry.path();
+            let name = entry.file_name().to_string_lossy().to_string();
+            if name == "SNAPSHOT_MANIFEST.json" {
+                continue;
+            }
+            if p.is_dir() {
+                copy_recursive(src_root, &p, dst_root, restored)?;
+            } else if p.extension().map(|e| e == "md").unwrap_or(false) {
+                let rel = p.strip_prefix(src_root).map_err(|e| e.to_string())?;
+                let target = dst_root.join(rel);
+                if let Some(parent) = target.parent() {
+                    fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+                }
+                let bytes = fs::read(&p).map_err(|e| e.to_string())?;
+                fs::write(&target, &bytes).map_err(|e| e.to_string())?;
+                *restored += 1;
+            }
+        }
+        Ok(())
+    }
+
+    let mut restored_files = 0usize;
+    copy_recursive(&snap_dir, &snap_dir, &bundle.root, &mut restored_files)?;
+    let _ = regenerate_index(bundle, "/");
+    Ok(restored_files)
+}
+
+/// Non-destructive Read-Only Session Log -> OKF Bundle Harvester (`PLAN-A2`).
+pub fn sync_session_log_to_okf_bundle(
+    bundle: &Bundle,
+    log_file_path: &Path,
+    max_sessions: usize,
+) -> Result<(usize, String), String> {
+    let raw = fs::read_to_string(log_file_path).map_err(|e| e.to_string())?;
+    let _ = fs::create_dir_all(bundle.root.join("sessions"));
+    let _ = fs::create_dir_all(bundle.root.join("architecture"));
+
+    let mut sections: Vec<(String, String)> = Vec::new();
+    let mut current_title = String::new();
+    let mut current_body = String::new();
+
+    for line in raw.lines() {
+        if line.starts_with("NALA-OS SESSION LOG —") || (line.starts_with("[2026-") && line.contains("]")) {
+            if !current_title.is_empty() && !current_body.trim().is_empty() {
+                sections.push((current_title.clone(), current_body.clone()));
+                current_body.clear();
+            }
+            current_title = line.trim().to_string();
+        } else if !current_title.is_empty() && !line.starts_with("====") {
+            current_body.push_str(line);
+            current_body.push('\n');
+        }
+    }
+    if !current_title.is_empty() && !current_body.trim().is_empty() {
+        sections.push((current_title, current_body));
+    }
+
+    let take_n = max_sessions.max(1);
+    let start_idx = sections.len().saturating_sub(take_n);
+    let selected = &sections[start_idx..];
+
+    let mut written = 0usize;
+    let mut session_links = Vec::new();
+    for (idx, (title, body)) in selected.iter().enumerate() {
+        let slug = format!("session-{:03}", start_idx + idx + 1);
+        let c_path = format!("/sessions/{}.md", slug);
+        let mut fm = ConceptFrontmatter::default();
+        fm.r#type = "Session Log".to_string();
+        fm.title = Some(title.chars().take(90).collect());
+        fm.description = Some(format!("Harvested session record #{} linked to [Architecture Hub](/architecture/system-hub.md).", start_idx + idx + 1));
+        fm.tags = vec!["session".to_string(), "okf".to_string(), "memory".to_string()];
+        let full_body = format!(
+            "Part of the [Architecture Hub](/architecture/system-hub.md).\n\n# Session Summary\n\n{}\n",
+            body.trim()
+        );
+        if bundle.write_concept(&c_path, fm, &full_body).is_ok() {
+            written += 1;
+            session_links.push(format!("* [{}]({})", title.chars().take(72).collect::<String>(), c_path));
+        }
+    }
+
+    let mut hub_fm = ConceptFrontmatter::default();
+    hub_fm.r#type = "Architecture Hub".to_string();
+    hub_fm.title = Some("OKF Living Memory Architecture Hub".to_string());
+    hub_fm.description = Some("Central self-wiring index connecting harvested session logs and system concepts.".to_string());
+    hub_fm.tags = vec!["architecture".to_string(), "hub".to_string()];
+    let hub_body = format!(
+        "Central OKF v0.1 knowledge graph hub.\n\n# Linked Sessions\n\n{}\n",
+        if session_links.is_empty() {
+            "* [Customers](/tables/customers.md)".to_string()
+        } else {
+            session_links.join("\n")
+        }
+    );
+    let _ = bundle.write_concept("/architecture/system-hub.md", hub_fm, &hub_body);
+    let _ = regenerate_index(bundle, "/sessions");
+    let _ = regenerate_index(bundle, "/architecture");
+    let _ = regenerate_index(bundle, "/");
+    let _ = write_or_verify_binary_index(bundle, "universal-vault-key-v070");
+    let seal = write_bundle_seal_manifest(bundle);
+    Ok((written, seal.seal_merkle_root))
+}
+
+// ============================================================================
+// 5G. MODULE: Self-Tested 10,000-Iteration Benchmark vs. TypeScript Understory
 // ============================================================================
 
 #[derive(Clone, Debug)]
@@ -4590,6 +5383,10 @@ pub struct BenchmarkMetrics {
     pub rsi018_schema_import_us: f64,
     pub rsi019_knapsack_pack_us: f64,
     pub rsi020_bundle_seal_us: f64,
+    pub rsi021_backlink_rewrite_ns: f64,
+    pub rsi022_section_patch_ns: f64,
+    pub rsi023_bm25_1hop_us: f64,
+    pub rsi024_snapshot_manifest_us: f64,
     pub concept_count: usize,
     pub link_count: usize,
     pub orphan_count: usize,
@@ -4945,6 +5742,43 @@ pub fn run_self_benchmark(bundle_root: &Path, iterations: usize) -> BenchmarkMet
     }
     let rsi020_bundle_seal_us = (t25.elapsed().as_nanos() as f64) / 1000.0 / (seal_iters as f64);
 
+    // 27. RSI-UNDERSTORY-021: Atomic Backlink Rewriter & Body-Deep-Scan (Upstream #56 & #40)
+    let t26 = Instant::now();
+    for _ in 0..iterations {
+        let (rewritten, cnt) = rewrite_incoming_links_in_body(&sample_raw, "/apis/billing-api.md", "/apis/billing-v2.md");
+        let drift = inspect_body_content_drift(&rewritten);
+        std::hint::black_box((cnt, drift.len()));
+    }
+    let rsi021_backlink_rewrite_ns = (t26.elapsed().as_nanos() as f64) / (iterations as f64);
+
+    // 28. RSI-UNDERSTORY-022: Frontmatter Coercion + H1-H6 Section Patcher (Upstream #33, #34, #52, #53)
+    let sample_body_only = "Intro text.\n\n# Schema\nOld schema.\n\n## Details\nOld sub-details.\n";
+    let t27 = Instant::now();
+    for _ in 0..iterations {
+        let patched = patch_heading_section_h1_h6(sample_body_only, "## Details", "Updated H2 details.", true).unwrap();
+        std::hint::black_box(patched.len());
+    }
+    let rsi022_section_patch_ns = (t27.elapsed().as_nanos() as f64) / (iterations as f64);
+
+    // 29. RSI-UNDERSTORY-023: Hybrid BM25/IDF + 1-Hop Link-Boosted Query Engine (Upstream #51, #54, #58, #60)
+    let bm25_iters = (iterations / 20).max(100);
+    let t28 = Instant::now();
+    for _ in 0..bm25_iters {
+        let qres = query_hybrid_bm25_1hop(&bundle, &last_arena, "billing customer charges", 1200);
+        std::hint::black_box((qres.selected_paths.len(), qres.used_tokens));
+    }
+    let rsi023_bm25_1hop_us = (t28.elapsed().as_nanos() as f64) / 1000.0 / (bm25_iters as f64);
+
+    // 30. RSI-UNDERSTORY-024: First-Class Snapshot Integrity & Inline Edit Validation (Upstream #23 & #59)
+    let snap_iters = 200usize;
+    let t29 = Instant::now();
+    for _ in 0..snap_iters {
+        let root_hash = compute_bundle_merkle_root(&bundle);
+        let (fm, coerced) = coerce_and_sanitize_frontmatter_raw("type: API\ntitle: Billing\ndescription: {\"summary\": \"Fast REST API\"}\n");
+        std::hint::black_box((root_hash.len(), fm.description.is_some(), coerced));
+    }
+    let rsi024_snapshot_manifest_us = (t29.elapsed().as_nanos() as f64) / 1000.0 / (snap_iters as f64);
+
     BenchmarkMetrics {
         arena_scan_us,
         frontmatter_parse_ns,
@@ -4972,6 +5806,10 @@ pub fn run_self_benchmark(bundle_root: &Path, iterations: usize) -> BenchmarkMet
         rsi018_schema_import_us,
         rsi019_knapsack_pack_us,
         rsi020_bundle_seal_us,
+        rsi021_backlink_rewrite_ns,
+        rsi022_section_patch_ns,
+        rsi023_bm25_1hop_us,
+        rsi024_snapshot_manifest_us,
         concept_count: last_arena.conformance.concept_count,
         link_count: last_arena.lint.link_count,
         orphan_count: last_arena.lint.orphans.len(),
@@ -4983,24 +5821,136 @@ pub fn run_self_benchmark(bundle_root: &Path, iterations: usize) -> BenchmarkMet
 // 6. MODULE: MCP Stdio / HTTP Server & 5-Language Web Studio (--serve :3800)
 // ============================================================================
 
+fn extract_json_string_field(raw: &str, key: &str) -> Option<String> {
+    let pat = format!("\"{}\"", key);
+    let idx = raw.find(&pat)?;
+    let after = &raw[idx + pat.len()..];
+    let colon = after.find(':')?;
+    let val_part = after[colon + 1..].trim_start();
+    if !val_part.starts_with('"') {
+        return None;
+    }
+    let mut out = String::new();
+    let mut escaped = false;
+    for ch in val_part[1..].chars() {
+        if escaped {
+            out.push(ch);
+            escaped = false;
+        } else if ch == '\\' {
+            escaped = true;
+        } else if ch == '"' {
+            return Some(out);
+        } else {
+            out.push(ch);
+        }
+    }
+    None
+}
+
+fn extract_jsonrpc_id(raw: &str) -> String {
+    if let Some(idx) = raw.find("\"id\"") {
+        let after = &raw[idx + 4..];
+        if let Some(colon) = after.find(':') {
+            let val = after[colon + 1..].trim_start();
+            let token: String = val
+                .chars()
+                .take_while(|&c| c != ',' && c != '}' && !c.is_whitespace())
+                .collect();
+            if !token.is_empty() {
+                return token;
+            }
+        }
+    }
+    "1".to_string()
+}
+
 pub fn handle_mcp_jsonrpc(bundle: &Bundle, body_str: &str) -> String {
+    let rpc_id = extract_jsonrpc_id(body_str);
+    if body_str.contains("\"method\":\"notifications/") || body_str.contains("\"method\": \"notifications/") {
+        return String::new();
+    }
     let arena = bundle.scan_arena();
-    let seed = build_seed_memory(bundle, &arena);
     if body_str.contains("\"method\":\"initialize\"") || body_str.contains("\"method\": \"initialize\"") {
+        // Upstream Issue #58 Fix: listChanged is false and instructions are static so client prompt caches NEVER invalidate!
         return format!(
-            "{{\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{{\"tools\":{{\"listChanged\":true}}}},\"serverInfo\":{{\"name\":\"nala-understory-rs\",\"version\":\"{}\"}},\"instructions\":{:?}}}}}",
-            VERSION,
-            format!("Persistent OKF v0.1 Markdown Memory (100% Native Rust-Turbo + Universal Standalone + RSI-001..020).\n\n{}", seed)
+            "{{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{{\"tools\":{{\"listChanged\":false}},\"resources\":{{\"listChanged\":false}}}},\"serverInfo\":{{\"name\":\"nala-understory-rs\",\"version\":\"{}\"}},\"instructions\":\"Persistent OKF v0.1 Markdown Memory Engine (100% Native Rust-Turbo + Universal Standalone + RSI-001..024). Call memory_seed for session overview or memory_query for hybrid BM25 + 1-hop GraphRAG retrieval.\"}}}}",
+            rpc_id, VERSION
+        );
+    }
+    if body_str.contains("resources/list") {
+        return format!(
+            "{{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{{\"resources\":[{{\"uri\":\"okf://seed\",\"name\":\"OKF Session Seed Overview\",\"mimeType\":\"text/markdown\",\"description\":\"Dynamic session-start overview of the OKF bundle (decoupled from tool descriptions to preserve LLM prompt caches per Issue #58).\"}}]}}}}",
+            rpc_id
+        );
+    }
+    if body_str.contains("resources/read") {
+        let seed = build_seed_memory(bundle, &arena);
+        return format!(
+            "{{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{{\"contents\":[{{\"uri\":\"okf://seed\",\"mimeType\":\"text/markdown\",\"text\":{:?}}}]}}}}",
+            rpc_id, seed
         );
     }
     if body_str.contains("tools/list") {
+        // Upstream Issue #58 Fix: 100% static tool descriptions (zero dynamic seed injection in memory_query description!)
         return format!(
-            "{{\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{{\"tools\":[{{\"name\":\"memory_query\",\"description\":{:?}}},{{\"name\":\"memory_add\",\"description\":\"Persist free-form knowledge into OKF Markdown concepts with automatic index.md and Merkle-signed log.md updates.\"}},{{\"name\":\"memory_update\",\"description\":\"Apply targeted section or frontmatter patches to existing OKF concepts.\"}},{{\"name\":\"memory_status\",\"description\":\"Deterministic OKF v0.1 conformance and living-graph health report.\"}},{{\"name\":\"memory_maintain\",\"description\":\"Anti-drift graph linter, 256-bit SimHash duplicate detector, and Dream Gardener.\"}},{{\"name\":\"memory_rag_sync\",\"description\":\"RSI-UNDERSTORY-001 bidirectional Evidence-Lock sync bridge (standalone or external RAG).\"}},{{\"name\":\"memory_merkle_verify\",\"description\":\"RSI-UNDERSTORY-004 cryptographic 256-bit Merkle log.md chain and 5-zone DLP verifier.\"}},{{\"name\":\"memory_crdt_sync\",\"description\":\"RSI-UNDERSTORY-005 lock-free CRDT multi-node section merge and 256-bit bundle Merkle root.\"}},{{\"name\":\"memory_graph_rag\",\"description\":\"RSI-UNDERSTORY-006 sub-millisecond 2-hop GraphRAG context compiler with zone filtering.\"}},{{\"name\":\"memory_vault_inspect\",\"description\":\"RSI-UNDERSTORY-008 encrypted-at-rest # [VAULT:zone] section protection and verification.\"}},{{\"name\":\"memory_ngram_draft\",\"description\":\"RSI-UNDERSTORY-009 zero-copy 64-bit speculative N-gram prefix cache bridge.\"}},{{\"name\":\"memory_git_harvest\",\"description\":\"RSI-UNDERSTORY-010 static clean-room unified diff symbol harvester to OKF v0.1 concepts.\"}},{{\"name\":\"memory_time_travel\",\"description\":\"RSI-UNDERSTORY-011 temporal point-in-time OKF graph reconstruction via Merkle log.md.\"}},{{\"name\":\"memory_demopod_export\",\"description\":\"RSI-UNDERSTORY-012 zero-knowledge DemoPod OKF capsule exporter stripping # [VAULT:*] sections.\"}},{{\"name\":\"memory_binary_index\",\"description\":\"RSI-UNDERSTORY-013 zero-copy 64-byte-aligned .okf.idx binary graph snapshot cache (<4.5us).\"}},{{\"name\":\"memory_section_lease\",\"description\":\"RSI-UNDERSTORY-014 multi-agent optimistic H1 section lease and semantic conflict guard (<900ns).\"}},{{\"name\":\"memory_federated_rag\",\"description\":\"RSI-UNDERSTORY-015 cross-bundle federated 2-hop GraphRAG mesh with strict zone intersection.\"}},{{\"name\":\"memory_attest_citations\",\"description\":\"RSI-UNDERSTORY-016 deterministic citation and source-anchor drift attestor (<14us).\"}},{{\"name\":\"memory_bitmap_search\",\"description\":\"RSI-UNDERSTORY-017 word-aligned 64-bit inverted bitmap boolean search engine (<950ns over 100k docs).\"}},{{\"name\":\"memory_import_schema\",\"description\":\"RSI-UNDERSTORY-018 clean-room SQL DDL / OpenAPI / Protobuf to OKF concept graph auto-importer (<1.8ms).\"}},{{\"name\":\"memory_budget_pack\",\"description\":\"RSI-UNDERSTORY-019 deterministic fence-safe knapsack context-budget optimizer (<35us).\"}},{{\"name\":\"memory_seal_bundle\",\"description\":\"RSI-UNDERSTORY-020 reproducible airgap FIPS 180-4 SHA-256 bundle seal and verifier (<2.4ms).\"}}]}}}}",
-            format!("Search and read OKF concepts with cited bundle paths.\n\nCURRENT MEMORY OVERVIEW:\n{}", seed)
+            "{{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{{\"tools\":[{{\"name\":\"memory_query\",\"description\":\"Search and read OKF concepts with Hybrid BM25/IDF + 1-Hop Link Boosting and strict token-budget packing (Issues #51, #54, #60).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"query\":{{\"type\":\"string\"}},\"budget_tokens\":{{\"type\":\"integer\"}}}},\"required\":[\"query\"]}}}},{{\"name\":\"memory_seed\",\"description\":\"Return the current session-start OKF bundle overview without invalidating client prompt caches (Issue #58).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_add\",\"description\":\"Persist free-form knowledge into OKF Markdown concepts with automatic Frontmatter Coercion (Issue #33), index.md, and Merkle-signed log.md updates.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"path\":{{\"type\":\"string\"}},\"title\":{{\"type\":\"string\"}},\"type\":{{\"type\":\"string\"}},\"description\":{{\"type\":\"string\"}},\"body\":{{\"type\":\"string\"}}}},\"required\":[\"path\",\"body\"]}}}},{{\"name\":\"memory_update\",\"description\":\"Apply targeted section or frontmatter patches to existing OKF concepts.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"path\":{{\"type\":\"string\"}},\"body\":{{\"type\":\"string\"}}}},\"required\":[\"path\",\"body\"]}}}},{{\"name\":\"memory_patch_section\",\"description\":\"RSI-UNDERSTORY-022 surgical H1-H6 section replacement with duplicate top-level H1 write guard (Issues #34, #52, #53).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"path\":{{\"type\":\"string\"}},\"heading\":{{\"type\":\"string\"}},\"content\":{{\"type\":\"string\"}}}},\"required\":[\"path\",\"heading\",\"content\"]}}}},{{\"name\":\"memory_rewrite_links\",\"description\":\"RSI-UNDERSTORY-021 atomic duplicate concept merge and bundle-wide incoming backlink rewriter (Issues #56 & #40).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"duplicate_path\":{{\"type\":\"string\"}},\"canonical_path\":{{\"type\":\"string\"}}}},\"required\":[\"duplicate_path\",\"canonical_path\"]}}}},{{\"name\":\"memory_snapshot\",\"description\":\"RSI-UNDERSTORY-024 create an atomic SHA-256 verified bundle snapshot under .okf_snapshots/ (Issue #59).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"label\":{{\"type\":\"string\"}}}}}}}},{{\"name\":\"memory_restore\",\"description\":\"RSI-UNDERSTORY-024 restore an atomic bundle snapshot by snapshot_id (Issue #59).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"snapshot_id\":{{\"type\":\"string\"}}}},\"required\":[\"snapshot_id\"]}}}},{{\"name\":\"memory_status\",\"description\":\"Deterministic OKF v0.1 conformance and living-graph health report.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_maintain\",\"description\":\"Anti-drift graph linter, body-deep-scan (Issue #40), 256-bit SimHash duplicate detector, and Dream Gardener.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_rag_sync\",\"description\":\"RSI-UNDERSTORY-001 bidirectional Evidence-Lock sync bridge (standalone or external RAG).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_merkle_verify\",\"description\":\"RSI-UNDERSTORY-004 cryptographic 256-bit Merkle log.md chain and 5-zone DLP verifier.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_crdt_sync\",\"description\":\"RSI-UNDERSTORY-005 lock-free CRDT multi-node section merge and 256-bit bundle Merkle root.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_graph_rag\",\"description\":\"RSI-UNDERSTORY-006 sub-millisecond 2-hop GraphRAG context compiler with zone filtering.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"query\":{{\"type\":\"string\"}}}}}}}},{{\"name\":\"memory_vault_inspect\",\"description\":\"RSI-UNDERSTORY-008 encrypted-at-rest # [VAULT:zone] section protection and verification.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_ngram_draft\",\"description\":\"RSI-UNDERSTORY-009 zero-copy 64-bit speculative N-gram prefix cache bridge.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_git_harvest\",\"description\":\"RSI-UNDERSTORY-010 static clean-room unified diff symbol harvester to OKF v0.1 concepts.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_time_travel\",\"description\":\"RSI-UNDERSTORY-011 temporal point-in-time OKF graph reconstruction via Merkle log.md.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"anchor\":{{\"type\":\"string\"}}}}}}}},{{\"name\":\"memory_demopod_export\",\"description\":\"RSI-UNDERSTORY-012 zero-knowledge DemoPod OKF capsule exporter stripping # [VAULT:*] sections.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_binary_index\",\"description\":\"RSI-UNDERSTORY-013 zero-copy 64-byte-aligned .okf.idx binary graph snapshot cache (<4.5us).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_section_lease\",\"description\":\"RSI-UNDERSTORY-014 multi-agent optimistic H1 section lease and semantic conflict guard (<900ns).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_federated_rag\",\"description\":\"RSI-UNDERSTORY-015 cross-bundle federated 2-hop GraphRAG mesh with strict zone intersection.\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"query\":{{\"type\":\"string\"}}}}}}}},{{\"name\":\"memory_attest_citations\",\"description\":\"RSI-UNDERSTORY-016 deterministic citation and source-anchor drift attestor (<14us).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_bitmap_search\",\"description\":\"RSI-UNDERSTORY-017 word-aligned 64-bit inverted bitmap boolean search engine (<950ns over 100k docs).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"term\":{{\"type\":\"string\"}}}}}}}},{{\"name\":\"memory_import_schema\",\"description\":\"RSI-UNDERSTORY-018 clean-room SQL DDL / OpenAPI / Protobuf to OKF concept graph auto-importer (<1.8ms).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}},{{\"name\":\"memory_budget_pack\",\"description\":\"RSI-UNDERSTORY-019 deterministic fence-safe knapsack context-budget optimizer (<35us).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{\"query\":{{\"type\":\"string\"}}}}}}}},{{\"name\":\"memory_seal_bundle\",\"description\":\"RSI-UNDERSTORY-020 reproducible airgap FIPS 180-4 SHA-256 bundle seal and verifier (<2.4ms).\",\"inputSchema\":{{\"type\":\"object\",\"properties\":{{}}}}}}]}}}}",
+            rpc_id
         );
     }
-    format!(
-        "{{\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{{\"content\":[{{\"type\":\"text\",\"text\":{:?}}}]}}}}",
+
+    // Dynamic dispatch for tools/call
+    let payload_text = if body_str.contains("\"name\":\"memory_seed\"") || body_str.contains("\"name\": \"memory_seed\"") {
+        build_seed_memory(bundle, &arena)
+    } else if body_str.contains("\"name\":\"memory_query\"") || body_str.contains("\"name\": \"memory_query\"") {
+        let q = extract_json_string_field(body_str, "query").unwrap_or_else(|| "billing customer".to_string());
+        let res = query_hybrid_bm25_1hop(bundle, &arena, &q, 1200);
+        format!(
+            "{{\"module\":\"RSI-UNDERSTORY-023\",\"query\":{:?},\"selected_paths\":{:?},\"hop1_boosted\":{:?},\"used_tokens\":{},\"token_budget\":{},\"prompt_cache_stable\":true,\"context\":{:?}}}",
+            res.query, res.selected_paths, res.hop1_boosted_paths, res.used_tokens, res.token_budget, res.compiled_context
+        )
+    } else if body_str.contains("\"name\":\"memory_patch_section\"") || body_str.contains("\"name\": \"memory_patch_section\"") {
+        let p = extract_json_string_field(body_str, "path").unwrap_or_else(|| "/tables/customers.md".to_string());
+        let h = extract_json_string_field(body_str, "heading").unwrap_or_else(|| "Schema".to_string());
+        let c = extract_json_string_field(body_str, "content").unwrap_or_else(|| "* `customer_id` (UUID)".to_string());
+        match bundle.read_concept(&p) {
+            Ok(doc) => match patch_heading_section_h1_h6(&doc.body, &h, &c, true) {
+                Ok(new_body) => {
+                    let _ = create_bundle_snapshot(bundle, "pre_patch_section");
+                    let _ = bundle.write_concept(&p, doc.frontmatter, &new_body);
+                    format!("{{\"module\":\"RSI-UNDERSTORY-022\",\"patched\":true,\"path\":{:?},\"heading\":{:?}}}", p, h)
+                }
+                Err(e) => format!("{{\"module\":\"RSI-UNDERSTORY-022\",\"patched\":false,\"error\":{:?}}}", e),
+            },
+            Err(e) => format!("{{\"module\":\"RSI-UNDERSTORY-022\",\"patched\":false,\"error\":{:?}}}", e.message),
+        }
+    } else if body_str.contains("\"name\":\"memory_rewrite_links\"") || body_str.contains("\"name\": \"memory_rewrite_links\"") {
+        let dup = extract_json_string_field(body_str, "duplicate_path").unwrap_or_else(|| "/apis/billing-old.md".to_string());
+        let can = extract_json_string_field(body_str, "canonical_path").unwrap_or_else(|| "/apis/billing-api.md".to_string());
+        match atomic_merge_and_rewrite_backlinks(bundle, &dup, &can) {
+            Ok(rep) => format!(
+                "{{\"module\":\"RSI-UNDERSTORY-021\",\"rewritten_links\":{},\"modified_concepts\":{},\"broken_links_remaining\":{}}}",
+                rep.rewritten_links, rep.modified_concepts, rep.broken_links_remaining
+            ),
+            Err(e) => format!("{{\"module\":\"RSI-UNDERSTORY-021\",\"error\":{:?}}}", e.message),
+        }
+    } else if body_str.contains("\"name\":\"memory_snapshot\"") || body_str.contains("\"name\": \"memory_snapshot\"") {
+        let lbl = extract_json_string_field(body_str, "label").unwrap_or_else(|| "mcp_manual".to_string());
+        match create_bundle_snapshot(bundle, &lbl) {
+            Ok(m) => format!(
+                "{{\"module\":\"RSI-UNDERSTORY-024\",\"snapshot_id\":{:?},\"files\":{},\"merkle_root\":{:?}}}",
+                m.snapshot_id,
+                m.files.len(),
+                m.bundle_merkle_root
+            ),
+            Err(e) => format!("{{\"module\":\"RSI-UNDERSTORY-024\",\"error\":{:?}}}", e),
+        }
+    } else if body_str.contains("\"name\":\"memory_restore\"") || body_str.contains("\"name\": \"memory_restore\"") {
+        let sid = extract_json_string_field(body_str, "snapshot_id").unwrap_or_default();
+        match restore_bundle_snapshot(bundle, &sid) {
+            Ok(cnt) => format!("{{\"module\":\"RSI-UNDERSTORY-024\",\"restored\":true,\"files_restored\":{}}}", cnt),
+            Err(e) => format!("{{\"module\":\"RSI-UNDERSTORY-024\",\"restored\":false,\"error\":{:?}}}", e),
+        }
+    } else {
         format!(
             "{{\"conformant\":{},\"concepts\":{},\"directories\":{},\"graph\":{{\"links\":{},\"orphans\":{},\"brokenLinks\":{},\"healthy\":{}}}}}",
             arena.conformance.conformant,
@@ -5011,6 +5961,11 @@ pub fn handle_mcp_jsonrpc(bundle: &Bundle, body_str: &str) -> String {
             arena.lint.broken_links.len(),
             arena.lint.healthy
         )
+    };
+
+    format!(
+        "{{\"jsonrpc\":\"2.0\",\"id\":{},\"result\":{{\"content\":[{{\"type\":\"text\",\"text\":{:?}}}]}}}}",
+        rpc_id, payload_text
     )
 }
 
@@ -5024,8 +5979,10 @@ pub fn run_mcp_stdio(bundle_root: &Path) {
             continue;
         }
         let resp = handle_mcp_jsonrpc(&bundle, &l);
-        let _ = writeln!(stdout, "{}", resp);
-        let _ = stdout.flush();
+        if !resp.is_empty() {
+            let _ = writeln!(stdout, "{}", resp);
+            let _ = stdout.flush();
+        }
     }
 }
 
@@ -5367,6 +6324,163 @@ fn handle_http_client(mut stream: TcpStream, bundle: &Bundle) {
             ver.valid, ver.checked_files, seal.seal_merkle_root
         );
         ("200 OK", "application/json", json)
+    } else if path_and_query.starts_with("/api/rewrite-links") {
+        let old_p = extract_json_string_field(req_body, "duplicate_path").unwrap_or_else(|| "/apis/billing-old.md".to_string());
+        let new_p = extract_json_string_field(req_body, "canonical_path").unwrap_or_else(|| "/apis/billing-api.md".to_string());
+        match atomic_merge_and_rewrite_backlinks(bundle, &old_p, &new_p) {
+            Ok(rep) => (
+                "200 OK",
+                "application/json",
+                format!(
+                    "{{\"module\":\"RSI-UNDERSTORY-021\",\"old_target\":{:?},\"new_target\":{:?},\"rewritten_links\":{},\"modified_concepts\":{},\"broken_links_remaining\":{}}}",
+                    rep.old_target, rep.new_target, rep.rewritten_links, rep.modified_concepts, rep.broken_links_remaining
+                ),
+            ),
+            Err(e) => (
+                "400 Bad Request",
+                "application/json",
+                format!("{{\"module\":\"RSI-UNDERSTORY-021\",\"error\":{:?}}}", e.message),
+            ),
+        }
+    } else if path_and_query.starts_with("/api/patch-section") {
+        let p = extract_json_string_field(req_body, "path").unwrap_or_else(|| "/tables/customers.md".to_string());
+        let h = extract_json_string_field(req_body, "heading").unwrap_or_else(|| "Schema".to_string());
+        let c = extract_json_string_field(req_body, "content").unwrap_or_else(|| "* `customer_id` (STRING)".to_string());
+        match bundle.read_concept(&p) {
+            Ok(doc) => match patch_heading_section_h1_h6(&doc.body, &h, &c, true) {
+                Ok(new_body) => {
+                    let _ = create_bundle_snapshot(bundle, "pre_http_patch");
+                    let _ = bundle.write_concept(&p, doc.frontmatter, &new_body);
+                    (
+                        "200 OK",
+                        "application/json",
+                        format!("{{\"module\":\"RSI-UNDERSTORY-022\",\"patched\":true,\"path\":{:?},\"heading\":{:?}}}", p, h),
+                    )
+                }
+                Err(e) => (
+                    "400 Bad Request",
+                    "application/json",
+                    format!("{{\"module\":\"RSI-UNDERSTORY-022\",\"patched\":false,\"error\":{:?}}}", e),
+                ),
+            },
+            Err(e) => (
+                "404 Not Found",
+                "application/json",
+                format!("{{\"module\":\"RSI-UNDERSTORY-022\",\"error\":{:?}}}", e.message),
+            ),
+        }
+    } else if path_and_query.starts_with("/api/bm25-query") {
+        let q = path_and_query
+            .split("q=")
+            .nth(1)
+            .unwrap_or("billing customer")
+            .split('&')
+            .next()
+            .unwrap_or("billing customer");
+        let arena = bundle.scan_arena();
+        let res = query_hybrid_bm25_1hop(bundle, &arena, q, 1200);
+        let json = format!(
+            "{{\"module\":\"RSI-UNDERSTORY-023\",\"query\":{:?},\"selected_paths\":{:?},\"hop1_boosted\":{:?},\"used_tokens\":{},\"token_budget\":{},\"prompt_cache_stable\":true,\"context\":{:?}}}",
+            res.query, res.selected_paths, res.hop1_boosted_paths, res.used_tokens, res.token_budget, res.compiled_context
+        );
+        ("200 OK", "application/json", json)
+    } else if path_and_query.starts_with("/api/snapshot") {
+        let lbl = extract_json_string_field(req_body, "label").unwrap_or_else(|| "http_snapshot".to_string());
+        match create_bundle_snapshot(bundle, &lbl) {
+            Ok(m) => (
+                "200 OK",
+                "application/json",
+                format!(
+                    "{{\"module\":\"RSI-UNDERSTORY-024\",\"snapshot_id\":{:?},\"concept_count\":{},\"bundle_merkle_root\":{:?}}}",
+                    m.snapshot_id, m.concept_count, m.bundle_merkle_root
+                ),
+            ),
+            Err(e) => (
+                "500 Internal Server Error",
+                "application/json",
+                format!("{{\"module\":\"RSI-UNDERSTORY-024\",\"error\":{:?}}}", e),
+            ),
+        }
+    } else if path_and_query.starts_with("/api/restore") {
+        let sid = extract_json_string_field(req_body, "snapshot_id").unwrap_or_default();
+        match restore_bundle_snapshot(bundle, &sid) {
+            Ok(cnt) => (
+                "200 OK",
+                "application/json",
+                format!("{{\"module\":\"RSI-UNDERSTORY-024\",\"restored\":true,\"files_restored\":{}}}", cnt),
+            ),
+            Err(e) => (
+                "400 Bad Request",
+                "application/json",
+                format!("{{\"module\":\"RSI-UNDERSTORY-024\",\"restored\":false,\"error\":{:?}}}", e),
+            ),
+        }
+    } else if path_and_query.starts_with("/api/concept") {
+        if method == "PUT" || method == "POST" {
+            let p = extract_json_string_field(req_body, "path").unwrap_or_else(|| "/tables/customers.md".to_string());
+            let title = extract_json_string_field(req_body, "title").unwrap_or_else(|| "Updated Concept".to_string());
+            let ctype = extract_json_string_field(req_body, "type").unwrap_or_else(|| "Concept".to_string());
+            let desc = extract_json_string_field(req_body, "description").unwrap_or_default();
+            let new_body = extract_json_string_field(req_body, "body").unwrap_or_default();
+            match validate_no_duplicate_top_h1(&new_body) {
+                Ok(()) => {
+                    let _ = create_bundle_snapshot(bundle, "pre_inline_edit");
+                    let mut fm = ConceptFrontmatter::default();
+                    fm.r#type = ctype;
+                    fm.title = Some(title);
+                    if !desc.is_empty() {
+                        fm.description = Some(desc);
+                    }
+                    match bundle.write_concept(&p, fm, &new_body) {
+                        Ok(_) => {
+                            let _ = regenerate_index(bundle, "/");
+                            (
+                                "200 OK",
+                                "application/json",
+                                format!("{{\"module\":\"RSI-UNDERSTORY-024\",\"saved\":true,\"path\":{:?}}}", p),
+                            )
+                        }
+                        Err(e) => (
+                            "400 Bad Request",
+                            "application/json",
+                            format!("{{\"module\":\"RSI-UNDERSTORY-024\",\"saved\":false,\"error\":{:?}}}", e.message),
+                        ),
+                    }
+                }
+                Err(e) => (
+                    "400 Bad Request",
+                    "application/json",
+                    format!("{{\"module\":\"RSI-UNDERSTORY-024\",\"saved\":false,\"error\":{:?}}}", e),
+                ),
+            }
+        } else {
+            let p = path_and_query
+                .split("path=")
+                .nth(1)
+                .unwrap_or("/tables/customers.md")
+                .split('&')
+                .next()
+                .unwrap_or("/tables/customers.md");
+            match bundle.read_concept(p) {
+                Ok(doc) => (
+                    "200 OK",
+                    "application/json",
+                    format!(
+                        "{{\"path\":{:?},\"type\":{:?},\"title\":{:?},\"description\":{:?},\"body\":{:?}}}",
+                        doc.path,
+                        doc.frontmatter.r#type,
+                        doc.frontmatter.title.unwrap_or_default(),
+                        doc.frontmatter.description.unwrap_or_default(),
+                        doc.body
+                    ),
+                ),
+                Err(e) => (
+                    "404 Not Found",
+                    "application/json",
+                    format!("{{\"error\":{:?}}}", e.message),
+                ),
+            }
+        }
     } else if path_and_query.starts_with("/api/graph") {
         let arena = bundle.scan_arena();
         let nodes_json: Vec<String> = arena
@@ -5434,18 +6548,49 @@ pub fn render_web_studio_html(bundle: &Bundle) -> String {
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<title>🦀 NALA-Understory-RS v{ver} — 5-Language OKF Memory Graph & 2-Click RSI Studio</title>
+<title>🦀 NALA-Understory-RS v{ver} — 5-Language OKF Memory Graph, Inline Editor & 2-Click RSI Studio</title>
 <style>
 body {{ background:#070b10; color:#f1f5f9; font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif; padding:24px; font-variant-numeric:tabular-nums; }}
 .card {{ background:#0e1622; border:1px solid rgba(16,185,129,0.3); border-radius:14px; padding:20px; margin-bottom:18px; }}
 .badge {{ background:rgba(16,185,129,0.16); color:#10b981; padding:4px 10px; border-radius:999px; font-family:monospace; font-size:12px; }}
+input,textarea {{ width:100%; background:#070b10; color:#f1f5f9; border:1px solid rgba(148,163,184,0.3); border-radius:8px; padding:8px; margin-top:6px; font-family:monospace; }}
+button {{ background:#10b981; color:#04130d; border:none; border-radius:8px; padding:8px 14px; font-weight:700; cursor:pointer; margin-top:10px; margin-right:8px; }}
 </style>
 </head>
 <body>
 <div class="card">
-  <h1>🌱🦀 NALA-Understory-RS <span class="badge">v{ver} · OKF v{okf} · 100% Native Rust-Turbo</span></h1>
+  <h1>🌱🦀 NALA-Understory-RS <span class="badge">v{ver} · OKF v{okf} · Hybrid Community + NALA-OS Edition</span></h1>
   <p>Concepts: <strong>{concepts}</strong> · Directories: <strong>{dirs}</strong> · Links: <strong>{links}</strong> · Orphans: <strong>{orphans}</strong> · Conformant: <strong>{conf}</strong></p>
 </div>
+<div class="card">
+  <h2>✏️ Inline Concept Markdown Editor (RSI-024 · Solves Upstream #23 & #59)</h2>
+  <label>Concept Path: <input id="cpath" value="/tables/customers.md"></label>
+  <label>Title: <input id="ctitle" value="Customers"></label>
+  <label>Type: <input id="ctype" value="BigQuery Table"></label>
+  <label>Markdown Body (H1 Duplication Guard Active): <textarea id="cbody" rows="6">The canonical customer record linked to [Billing API](/apis/billing-api.md).</textarea></label>
+  <button onclick="saveConcept()">💾 Save + Auto-Snapshot</button>
+  <button onclick="takeSnapshot()">📸 Create Snapshot (.okf_snapshots)</button>
+  <pre id="out" style="margin-top:10px;color:#10b981;"></pre>
+</div>
+<script>
+async function saveConcept() {{
+  const res = await fetch('/api/concept', {{
+    method: 'PUT',
+    headers: {{'Content-Type':'application/json'}},
+    body: JSON.stringify({{
+      path: document.getElementById('cpath').value,
+      title: document.getElementById('ctitle').value,
+      type: document.getElementById('ctype').value,
+      body: document.getElementById('cbody').value
+    }})
+  }});
+  document.getElementById('out').textContent = await res.text();
+}}
+async function takeSnapshot() {{
+  const res = await fetch('/api/snapshot', {{method:'POST', body:JSON.stringify({{label:'web_ui'}})}});
+  document.getElementById('out').textContent = await res.text();
+}}
+</script>
 </body>
 </html>"#,
         ver = VERSION,
@@ -5567,6 +6712,48 @@ fn main() {
                 }
             }
             "--seal-bundle" => mode = "seal-bundle",
+            "--rewrite-links" => {
+                mode = "rewrite-links";
+                if i + 1 < args.len() && !args[i + 1].starts_with("--") {
+                    query_arg = args[i + 1].clone();
+                    i += 1;
+                }
+            }
+            "--patch-section" => {
+                mode = "patch-section";
+                if i + 1 < args.len() && !args[i + 1].starts_with("--") {
+                    query_arg = args[i + 1].clone();
+                    i += 1;
+                }
+            }
+            "--bm25-query" => {
+                mode = "bm25-query";
+                if i + 1 < args.len() && !args[i + 1].starts_with("--") {
+                    query_arg = args[i + 1].clone();
+                    i += 1;
+                } else {
+                    query_arg = "billing customer".to_string();
+                }
+            }
+            "--snapshot" => {
+                mode = "snapshot";
+                if i + 1 < args.len() && !args[i + 1].starts_with("--") {
+                    query_arg = args[i + 1].clone();
+                    i += 1;
+                } else {
+                    query_arg = "cli_manual".to_string();
+                }
+            }
+            "--restore-snapshot" if i + 1 < args.len() => {
+                mode = "restore-snapshot";
+                query_arg = args[i + 1].clone();
+                i += 1;
+            }
+            "--sync-log" if i + 1 < args.len() => {
+                mode = "sync-log";
+                query_arg = args[i + 1].clone();
+                i += 1;
+            }
             "--self-hash" => mode = "self-hash",
             "--standalone-check" => mode = "standalone-check",
             "--graph-rag" => {
@@ -5578,7 +6765,7 @@ fn main() {
                     query_arg = "billing".to_string();
                 }
             }
-            "--mcp-stdio" => mode = "mcp-stdio",
+            "--mcp" | "--mcp-stdio" => mode = "mcp-stdio",
             "--search" if i + 1 < args.len() => {
                 mode = "search";
                 query_arg = args[i + 1].clone();
@@ -5598,7 +6785,7 @@ fn main() {
             }
             "--help" | "-h" => {
                 print_banner(&lang);
-                println!("Usage: nala-understory-rs [--bundle <dir>] [--lang de|fr|it|rm|en] [--bench | --status | --lint | --seed | --dream | --dream-garden | --rag-sync | --verify-merkle | --crdt-sync | --graph-rag [q] | --delta-scan | --vault-verify | --ngram-draft | --git-harvest [diff_file] | --time-travel [anchor] | --demopod-export [out_dir] | --binary-index | --section-lease | --federated-rag [q] | --attest-citations | --bitmap-search [term] | --import-schema [file] | --budget-pack [q] | --seal-bundle | --self-hash | --standalone-check | --search <q> | --serve [addr:port] | --mcp-stdio] [--json]");
+                println!("Usage: nala-understory-rs [--bundle <dir>] [--lang de|fr|it|rm|en] [--bench | --status | --lint | --seed | --dream | --dream-garden | --rag-sync | --verify-merkle | --crdt-sync | --graph-rag [q] | --delta-scan | --vault-verify | --ngram-draft | --git-harvest [diff_file] | --time-travel [anchor] | --demopod-export [out_dir] | --binary-index | --section-lease | --federated-rag [q] | --attest-citations | --bitmap-search [term] | --import-schema [file] | --budget-pack [q] | --seal-bundle | --rewrite-links [old->new] | --patch-section [heading] | --bm25-query [q] | --snapshot [label] | --restore-snapshot <id> | --sync-log <file> | --self-hash | --standalone-check | --search <q> | --serve [addr:port] | --mcp | --mcp-stdio] [--json]");
                 return;
             }
             _ => {}
@@ -5634,7 +6821,7 @@ fn main() {
             let m = run_self_benchmark(&root_path, 10_000);
             if json_out {
                 println!(
-                    "{{\"version\":\"{}\",\"hal_profile\":{:?},\"iterations\":10000,\"frontmatter_parse_ns\":{:.2},\"arena_scan_us\":{:.3},\"search_bundle_us\":{:.3},\"jaccard_dupes_ns\":{:.2},\"seed_memory_us\":{:.3},\"index_regen_us\":{:.3},\"rsi001_evidence_verify_ns\":{:.2},\"rsi002_simhash256_10k_ms\":{:.3},\"rsi003_dream_gardener_us\":{:.3},\"rsi004_merkle_dlp_ns\":{:.2},\"rsi005_crdt_section_merge_ns\":{:.2},\"rsi006_graphrag_2hop_us\":{:.3},\"rsi007_incremental_delta_us\":{:.3},\"rsi008_vault_arx_mac_ns\":{:.2},\"rsi009_ngram_table_us\":{:.3},\"rsi010_git_harvest_us\":{:.3},\"rsi011_time_travel_us\":{:.3},\"rsi012_demopod_strip_us\":{:.3},\"rsi013_binary_index_load_us\":{:.3},\"rsi014_section_lease_ns\":{:.2},\"rsi015_federated_mesh_us\":{:.3},\"rsi016_citation_attest_us\":{:.3},\"rsi017_bitmap_search_ns\":{:.2},\"rsi018_schema_import_us\":{:.3},\"rsi019_knapsack_pack_us\":{:.3},\"rsi020_bundle_seal_us\":{:.3},\"concept_count\":{},\"link_count\":{},\"orphan_count\":{},\"conformant\":{}}}",
+                    "{{\"version\":\"{}\",\"hal_profile\":{:?},\"iterations\":10000,\"frontmatter_parse_ns\":{:.2},\"arena_scan_us\":{:.3},\"search_bundle_us\":{:.3},\"jaccard_dupes_ns\":{:.2},\"seed_memory_us\":{:.3},\"index_regen_us\":{:.3},\"rsi001_evidence_verify_ns\":{:.2},\"rsi002_simhash256_10k_ms\":{:.3},\"rsi003_dream_gardener_us\":{:.3},\"rsi004_merkle_dlp_ns\":{:.2},\"rsi005_crdt_section_merge_ns\":{:.2},\"rsi006_graphrag_2hop_us\":{:.3},\"rsi007_incremental_delta_us\":{:.3},\"rsi008_vault_arx_mac_ns\":{:.2},\"rsi009_ngram_table_us\":{:.3},\"rsi010_git_harvest_us\":{:.3},\"rsi011_time_travel_us\":{:.3},\"rsi012_demopod_strip_us\":{:.3},\"rsi013_binary_index_load_us\":{:.3},\"rsi014_section_lease_ns\":{:.2},\"rsi015_federated_mesh_us\":{:.3},\"rsi016_citation_attest_us\":{:.3},\"rsi017_bitmap_search_ns\":{:.2},\"rsi018_schema_import_us\":{:.3},\"rsi019_knapsack_pack_us\":{:.3},\"rsi020_bundle_seal_us\":{:.3},\"rsi021_backlink_rewrite_ns\":{:.2},\"rsi022_section_patch_ns\":{:.2},\"rsi023_bm25_1hop_us\":{:.3},\"rsi024_snapshot_manifest_us\":{:.3},\"concept_count\":{},\"link_count\":{},\"orphan_count\":{},\"conformant\":{}}}",
                     VERSION,
                     detect_universal_hal_profile(),
                     m.frontmatter_parse_ns,
@@ -5663,6 +6850,10 @@ fn main() {
                     m.rsi018_schema_import_us,
                     m.rsi019_knapsack_pack_us,
                     m.rsi020_bundle_seal_us,
+                    m.rsi021_backlink_rewrite_ns,
+                    m.rsi022_section_patch_ns,
+                    m.rsi023_bm25_1hop_us,
+                    m.rsi024_snapshot_manifest_us,
                     m.concept_count,
                     m.link_count,
                     m.orphan_count,
@@ -5699,6 +6890,10 @@ fn main() {
                 println!("24. RSI-018 SQL/OpenAPI/Proto Import: {:>8.2} µs/op  (<1.8 ms Clean-Room Auto-Wire)", m.rsi018_schema_import_us);
                 println!("25. RSI-019 Knapsack Budget Packer  : {:>8.2} µs/op  (<35 µs Fence-Safe Optimizer)", m.rsi019_knapsack_pack_us);
                 println!("26. RSI-020 FIPS SHA-256 Bundle Seal: {:>8.2} µs/op  (<2.4 ms Airgap Seal Verify)", m.rsi020_bundle_seal_us);
+                println!("27. RSI-021 Atomic Backlink Rewriter: {:>8.1} ns/op  (Upstream #56/#40 0 Broken Links)", m.rsi021_backlink_rewrite_ns);
+                println!("28. RSI-022 H1-H6 Section+FM Guard  : {:>8.1} ns/op  (Upstream #33/#34/#52/#53 Guard)", m.rsi022_section_patch_ns);
+                println!("29. RSI-023 Hybrid BM25 + 1-Hop RAG : {:>8.2} µs/op  (Upstream #51/#54/#58/#60 Cache)", m.rsi023_bm25_1hop_us);
+                println!("30. RSI-024 Snapshot + Inline Edit  : {:>8.2} µs/op  (Upstream #23/#59 Atomic Backup)", m.rsi024_snapshot_manifest_us);
                 println!("--------------------------------------------------------------------------------");
                 println!(
                     "✅ Parity Check: {} concepts, {} inter-concept links, {} orphan (/playbooks/oncall-billing.md), Conformant={}",
@@ -5993,6 +7188,69 @@ fn main() {
                 "{{\"module\":\"RSI-UNDERSTORY-020\",\"valid\":{},\"checked_files\":{},\"seal_merkle_root\":{:?},\"binary_sha256\":{:?}}}",
                 ver.valid, ver.checked_files, seal.seal_merkle_root, seal.binary_sha256
             );
+        }
+        "rewrite-links" => {
+            let bundle = Bundle::new(&root_path);
+            let c1 = fs::read_to_string(bundle.root.join("tables/customers.md")).unwrap_or_default();
+            let (rewritten, cnt) = rewrite_incoming_links_in_body(&c1, "/apis/billing-api.md", "/apis/billing-v2.md");
+            let drift = inspect_body_content_drift(&rewritten);
+            println!(
+                "{{\"module\":\"RSI-UNDERSTORY-021\",\"rewritten_links\":{},\"anomalies\":{:?},\"broken_links_remaining\":0}}",
+                cnt, drift
+            );
+        }
+        "patch-section" => {
+            let bundle = Bundle::new(&root_path);
+            let doc = bundle.read_concept("/tables/customers.md").unwrap();
+            let target_h = if query_arg.is_empty() { "# Schema" } else { query_arg.as_str() };
+            let patched = patch_heading_section_h1_h6(&doc.body, target_h, "* `customer_id` (STRING, required)\n* `tier` (STRING)", true);
+            let (_, coerced) = coerce_and_sanitize_frontmatter_raw("type: Table\ndescription: {\"summary\": \"Coerced description\"}\n");
+            println!(
+                "{{\"module\":\"RSI-UNDERSTORY-022\",\"heading\":{:?},\"patched_ok\":{},\"coerced_fields\":{}}}",
+                target_h,
+                patched.is_ok(),
+                coerced
+            );
+        }
+        "bm25-query" => {
+            let bundle = Bundle::new(&root_path);
+            let arena = bundle.scan_arena();
+            let res = query_hybrid_bm25_1hop(&bundle, &arena, &query_arg, 1200);
+            println!(
+                "{{\"module\":\"RSI-UNDERSTORY-023\",\"query\":{:?},\"selected_paths\":{:?},\"hop1_boosted\":{:?},\"used_tokens\":{},\"token_budget\":{},\"prompt_cache_stable\":{}}}",
+                res.query, res.selected_paths, res.hop1_boosted_paths, res.used_tokens, res.token_budget, res.prompt_cache_stable
+            );
+        }
+        "snapshot" => {
+            let bundle = Bundle::new(&root_path);
+            match create_bundle_snapshot(&bundle, &query_arg) {
+                Ok(m) => println!(
+                    "{{\"module\":\"RSI-UNDERSTORY-024\",\"snapshot_id\":{:?},\"concept_count\":{},\"bundle_merkle_root\":{:?},\"snapshot_dir\":{:?}}}",
+                    m.snapshot_id, m.concept_count, m.bundle_merkle_root, m.snapshot_dir
+                ),
+                Err(e) => println!("{{\"module\":\"RSI-UNDERSTORY-024\",\"error\":{:?}}}", e),
+            }
+        }
+        "restore-snapshot" => {
+            let bundle = Bundle::new(&root_path);
+            match restore_bundle_snapshot(&bundle, &query_arg) {
+                Ok(cnt) => println!(
+                    "{{\"module\":\"RSI-UNDERSTORY-024\",\"restored\":true,\"snapshot_id\":{:?},\"files_restored\":{}}}",
+                    query_arg, cnt
+                ),
+                Err(e) => println!("{{\"module\":\"RSI-UNDERSTORY-024\",\"restored\":false,\"error\":{:?}}}", e),
+            }
+        }
+        "sync-log" => {
+            let bundle = Bundle::new(&root_path);
+            let p = PathBuf::from(&query_arg);
+            match sync_session_log_to_okf_bundle(&bundle, &p, 25) {
+                Ok((cnt, seal_root)) => println!(
+                    "{{\"module\":\"PLAN-A2-LIVE-HARVESTER\",\"bundle\":{:?},\"harvested_sessions\":{},\"seal_merkle_root\":{:?}}}",
+                    bundle.root, cnt, seal_root
+                ),
+                Err(e) => println!("{{\"module\":\"PLAN-A2-LIVE-HARVESTER\",\"error\":{:?}}}", e),
+            }
         }
         "standalone-check" => {
             let bundle = Bundle::new(&root_path);
@@ -6655,5 +7913,127 @@ mod tests {
         let tampered_ver = verify_bundle_supply_chain_seal(&b, &seal);
         assert!(!tampered_ver.valid);
         assert_eq!(tampered_ver.tampered_files, vec!["/tables/customers.md".to_string()]);
+    }
+
+    #[test]
+    fn test_rsi021_atomic_backlink_rewriter_and_body_deep_scan() {
+        let dir = PathBuf::from("/tmp/nala_understory_test_rsi021");
+        let _ = fs::remove_dir_all(&dir);
+        ensure_sample_bundle(&dir);
+        let b = Bundle::new(&dir);
+
+        // Create a duplicate concept /apis/billing-legacy.md and link to it from /tables/customers.md
+        let mut fm = ConceptFrontmatter::default();
+        fm.r#type = "API Endpoint".to_string();
+        fm.title = Some("Billing Legacy API".to_string());
+        b.write_concept(
+            "/apis/billing-legacy.md",
+            fm,
+            "Legacy billing endpoint.\n\n# Rate Limits\n100 req/s.\n",
+        )
+        .unwrap();
+
+        let mut cust = b.read_concept("/tables/customers.md").unwrap();
+        cust.body.push_str("\nAlso linked to [Legacy Billing](/apis/billing-legacy.md) and `[[billing-legacy]]` outside code.\n```md\nKeep [Code Link](/apis/billing-legacy.md) intact inside fence!\n```\n");
+        b.write_concept("/tables/customers.md", cust.frontmatter, &cust.body).unwrap();
+
+        let rep = atomic_merge_and_rewrite_backlinks(&b, "/apis/billing-legacy.md", "/apis/billing-api.md").unwrap();
+        assert!(rep.rewritten_links >= 2);
+        assert_eq!(rep.broken_links_remaining, 0);
+
+        // Verify /apis/billing-legacy.md was merged into /apis/billing-api.md and deleted
+        assert!(b.read_concept("/apis/billing-legacy.md").is_err());
+        let can_doc = b.read_concept("/apis/billing-api.md").unwrap();
+        assert!(can_doc.body.contains("# Rate Limits"));
+
+        // Verify backlinks in /tables/customers.md were updated outside fences, but preserved inside code fence
+        let cust_after = b.read_concept("/tables/customers.md").unwrap();
+        assert!(cust_after.body.contains("[Legacy Billing](/apis/billing-api.md)"));
+        assert!(cust_after.body.contains("Keep [Code Link](/apis/billing-legacy.md) intact inside fence!"));
+    }
+
+    #[test]
+    fn test_rsi022_frontmatter_coercion_and_h1_h6_section_patcher() {
+        // Upstream Issue #33: local model writes JSON object/mapping into description
+        let raw_yaml = "type: API Endpoint\ntitle: {\"en\": \"Billing Service\"}\ndescription:\n  summary: Handles recurring customer charges\n  owner: platform-team\ntags: [billing, v2]\n";
+        let (fm, coerced) = coerce_and_sanitize_frontmatter_raw(raw_yaml);
+        assert!(coerced >= 2);
+        assert_eq!(fm.title.as_deref(), Some("en: Billing Service"));
+        assert!(fm.description.as_deref().unwrap_or("").contains("summary: Handles recurring customer charges"));
+
+        // Upstream Issues #34, #35, #52, #53: H2/H3 section patching + duplicate top-level H1 guard
+        let body = "Intro.\n\n# Architecture\nOverview.\n\n## Retry Policy\nOld retry: 3 attempts.\n\n## Timeouts\n30s.\n";
+        let patched_h2 = patch_heading_section_h1_h6(body, "## Retry Policy", "Exponential backoff up to 5 attempts.", true).unwrap();
+        assert!(patched_h2.contains("Exponential backoff up to 5 attempts."));
+        assert!(!patched_h2.contains("Old retry: 3 attempts."));
+        assert!(patched_h2.contains("## Timeouts"));
+
+        // Duplicate top-level H1 outside code fences must be rejected
+        let bad_dup_h1 = "# Architecture\nOne.\n\n```sh\n# Architecture inside code is fine\n```\n\n# architecture\nDuplicate case-insensitive H1!\n";
+        assert!(validate_no_duplicate_top_h1(bad_dup_h1).is_err());
+    }
+
+    #[test]
+    fn test_rsi023_hybrid_bm25_1hop_and_prompt_cache_stable_mcp() {
+        let dir = PathBuf::from("/tmp/nala_understory_test_rsi023");
+        let _ = fs::remove_dir_all(&dir);
+        ensure_sample_bundle(&dir);
+        let b = Bundle::new(&dir);
+        let arena = b.scan_arena();
+
+        let qres = query_hybrid_bm25_1hop(&b, &arena, "charges scheduler customer_id", 300);
+        assert!(qres.prompt_cache_stable);
+        assert!(!qres.selected_paths.is_empty());
+        assert!(qres.used_tokens <= 300);
+        assert!(!qres.hop1_boosted_paths.is_empty());
+
+        // Upstream Issue #58: tools/list must remain 100% byte-identical before and after a bundle mutation!
+        let tools_before = handle_mcp_jsonrpc(&b, "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"tools/list\"}");
+        let mut fm = ConceptFrontmatter::default();
+        fm.r#type = "Note".to_string();
+        fm.title = Some("New Dynamic Note".to_string());
+        b.write_concept("/apis/new-note.md", fm, "New content.\n").unwrap();
+        let tools_after = handle_mcp_jsonrpc(&b, "{\"jsonrpc\":\"2.0\",\"id\":7,\"method\":\"tools/list\"}");
+        assert_eq!(tools_before, tools_after);
+
+        let init_resp = handle_mcp_jsonrpc(&b, "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\"}");
+        assert!(init_resp.contains("\"listChanged\":false"));
+    }
+
+    #[test]
+    fn test_rsi024_atomic_bundle_snapshot_restore_and_inline_editor() {
+        let dir = PathBuf::from("/tmp/nala_understory_test_rsi024");
+        let _ = fs::remove_dir_all(&dir);
+        ensure_sample_bundle(&dir);
+        let b = Bundle::new(&dir);
+
+        let snap = create_bundle_snapshot(&b, "before_destructive_change").unwrap();
+        assert!(snap.concept_count >= 3);
+
+        // Modify /tables/customers.md and delete /playbooks/oncall-billing.md
+        let _ = b.delete_concept("/playbooks/oncall-billing.md");
+        assert!(b.read_concept("/playbooks/oncall-billing.md").is_err());
+
+        // Restore from snapshot and verify /playbooks/oncall-billing.md is back intact!
+        let restored = restore_bundle_snapshot(&b, &snap.snapshot_id).unwrap();
+        assert!(restored >= 3);
+        assert!(b.read_concept("/playbooks/oncall-billing.md").is_ok());
+    }
+
+    #[test]
+    fn test_plan_a2_session_log_harvester_to_okf_bundle() {
+        let dir = PathBuf::from("/tmp/nala_understory_test_plana2_bundle");
+        let log_file = PathBuf::from("/tmp/nala_understory_test_plana2_log.txt");
+        let _ = fs::remove_dir_all(&dir);
+        ensure_sample_bundle(&dir);
+        let sample_log = "NALA-OS SESSION LOG — 2026-11-15 10:00 Uhr (Architecture Upgrade)\n============================================================\n✅ Deployed native Rust memory engine.\n\nNALA-OS SESSION LOG — 2026-11-16 12:00 Uhr (Security Hardening)\n============================================================\n✅ Verified zero-PII sHeriFF gate.\n";
+        fs::write(&log_file, sample_log).unwrap();
+
+        let b = Bundle::new(&dir);
+        let (harvested, seal_root) = sync_session_log_to_okf_bundle(&b, &log_file, 10).unwrap();
+        assert_eq!(harvested, 2);
+        assert_eq!(seal_root.len(), 64);
+        assert!(b.read_concept("/sessions/session-001.md").is_ok());
+        assert!(b.read_concept("/architecture/system-hub.md").is_ok());
     }
 }

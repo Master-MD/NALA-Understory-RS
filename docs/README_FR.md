@@ -1,20 +1,9 @@
-# 🇫🇷 NALA-Understory-RS (`v0.6.0-nala.6.6.6`) — Documentation Française (FR)
+# 🇫🇷 NALA-Understory-RS (`v0.7.0-nala.6.6.6`) — Documentation Française (FR)
 
-> **Portage 100% Rust Natif (`Edition 2024`, Zéro Node.js, Zéro Python, Zéro Télémétrie, 100% Autonome Universel) et Évolution Sécurisée Vagues 1 à 5 (`RSI-UNDERSTORY-001..020`) de [`thecodacus/understory`](https://github.com/thecodacus/understory)**
+> **Moteur 100% Rust Natif (`Edition 2024`, Zéro Node.js, Zéro Python, `0` Crate Externe, 100% Autonome & Hybride) pour [`thecodacus/understory`](https://github.com/thecodacus/understory) (`OKF v0.1`)**
 
-## 1. Vue d'Ensemble (`v0.6.0-nala.6.6.6`)
-**NALA-Understory-RS (`v0.6.0-nala.6.6.6`)** transforme un dossier Markdown (**OKF v0.1**) en une mémoire d'agent auto-maillée fonctionnant à **100% en mode autonome universel** sur macOS, Linux et Windows :
-- **`RSI-001..016` (Vagues 1–4)** : Evidence-Lock, SimHash-256 LSH, Dream Gardener, Merkle-256 `log.md` + DLP 5-Zones (`vault_primary..public_pearl`), CRDT Multi-Nœuds (`node-alpha..node-gamma`), GraphRAG 2-Sauts, Delta-Arène `< 18 µs`, `# [VAULT:zone]`, N-Gram spéculatif, Git-Harvest, Time-Travel, DemoPod, cache `.okf.idx`, baux H1 multi-agents, GraphRAG fédéré et attestateur de citations.
-- **`RSI-017..020` (Vague 5)** : Recherche booléenne par bitmaps inversés 64 bits `.okf.bm` (`--bitmap-search`, `< 950 ns`), importateur statique SQL DDL / OpenAPI / Protobuf (`--import-schema`, `< 1.8 ms`), optimiseur de budget Knapsack sans coupure de code (`--budget-pack`, `< 35 µs`) et scellement FIPS 180-4 SHA-256 `OKF_BUNDLE_SEAL.json` (`--seal-bundle`, `< 2.4 ms`).
-
-## 2. Démarrage Rapide (`22` Outils MCP & `26` Benchmarks)
-```bash
-nala-understory-rs --standalone-check
-nala-understory-rs --self-hash
-nala-understory-rs --bench
-nala-understory-rs --bitmap-search customer
-nala-understory-rs --import-schema
-nala-understory-rs --budget-pack "billing"
-nala-understory-rs --seal-bundle
-nala-understory-rs --serve 127.0.0.1:3800
-```
+## Nouveautés `v0.7.0-nala.6.6.6` (`RSI-001..024` · `27` Outils MCP · `30` Tests Unitaires)
+- **`RSI-021` (`--rewrite-links` / `memory_rewrite_links`)**: Fusion atomique des doublons et réécriture automatique des liens entrants (`#56` & `#40`, `0` lien cassé).
+- **`RSI-022` (`--patch-section` / `memory_patch_section`)**: Coercition automatique du frontmatter YAML/JSON pour modèles locaux (`#33`) et patch chirurgical des sections `H1`–`H6` avec garde anti-doublon `H1` (`#34`, `#52`, `#53`).
+- **`RSI-023` (`--bm25-query` / `memory_query` / `memory_seed`)**: Recherche hybride BM25/IDF + boost de liens à 1 saut (`#51`, `#54`, `#60`) et schémas MCP 100% statiques (`listChanged: false`) préservant le cache de prompt (`#58`).
+- **`RSI-024` (`--snapshot` / `--restore-snapshot` / `PUT /api/concept`)**: Snapshots atomiques SHA-256 dans `.okf_snapshots/` (`#59`) et éditeur Markdown en ligne dans le Web Studio (`#23`).

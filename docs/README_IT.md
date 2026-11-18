@@ -1,20 +1,9 @@
-# 🇮🇹 NALA-Understory-RS (`v0.6.0-nala.6.6.6`) — Documentazione Italiana (IT)
+# 🇮🇹 NALA-Understory-RS (`v0.7.0-nala.6.6.6`) — Documentazione Italiana (IT)
 
-> **Porting 100% Rust Nativo (`Edition 2024`, Zero Node.js, Zero Python, Zero Telemetria, 100% Standalone Universale) ed Evoluzione Blindata Ondate 1–5 (`RSI-UNDERSTORY-001..020`) di [`thecodacus/understory`](https://github.com/thecodacus/understory)**
+> **Motore 100% Rust Nativo (`Edition 2024`, Zero Node.js, Zero Python, `0` Dipendenze Esterne, 100% Standalone & Ibrido) per [`thecodacus/understory`](https://github.com/thecodacus/understory) (`OKF v0.1`)**
 
-## 1. Panoramica (`v0.6.0-nala.6.6.6`)
-**NALA-Understory-RS (`v0.6.0-nala.6.6.6`)** trasforma una cartella Markdown (**OKF v0.1**) in una memoria auto-collegata completamente autonoma su macOS, Linux e Windows:
-- **`RSI-001..016` (Ondate 1–4)**: Evidence-Lock, SimHash-256 LSH, Dream Gardener, catena Merkle-256 `log.md` + DLP a 5 zone (`vault_primary..public_pearl`), CRDT Multi-Nodo (`node-alpha..node-gamma`), GraphRAG a 2 salti, Delta-Arena, `# [VAULT:zone]`, N-Gram speculativo, Git-Harvest, Time-Travel, DemoPod, snapshot `.okf.idx`, lease multi-agente, GraphRAG federato e attestatore citazioni.
-- **`RSI-017..020` (Ondata 5)**: Ricerca booleana su bitmap invertite a 64 bit `.okf.bm` (`--bitmap-search`, `< 950 ns`), importatore statico SQL DDL / OpenAPI / Protobuf (`--import-schema`, `< 1.8 ms`), ottimizzatore Knapsack del contesto (`--budget-pack`, `< 35 µs`) e sigillo FIPS 180-4 SHA-256 `OKF_BUNDLE_SEAL.json` (`--seal-bundle`, `< 2.4 ms`).
-
-## 2. Avvio Rapido (`22` Strumenti MCP & `26` Benchmark)
-```bash
-nala-understory-rs --standalone-check
-nala-understory-rs --self-hash
-nala-understory-rs --bench
-nala-understory-rs --bitmap-search customer
-nala-understory-rs --import-schema
-nala-understory-rs --budget-pack "billing"
-nala-understory-rs --seal-bundle
-nala-understory-rs --serve 127.0.0.1:3800
-```
+## Novità `v0.7.0-nala.6.6.6` (`RSI-001..024` · `27` Strumenti MCP · `30` Test Unitari)
+- **`RSI-021` (`--rewrite-links` / `memory_rewrite_links`)**: Unione atomica dei duplicati e riscrittura automatica dei backlink in entrata (`#56` & `#40`, `0` link interrotti).
+- **`RSI-022` (`--patch-section` / `memory_patch_section`)**: Sanificazione automatica frontmatter YAML/JSON per modelli locali (`#33`) e modifica chirurgica delle sezioni `H1`–`H6` con blocco dei duplicati `# H1` (`#34`, `#52`, `#53`).
+- **`RSI-023` (`--bm25-query` / `memory_query` / `memory_seed`)**: Ricerca ibrida BM25/IDF + boost 1-Hop (`#51`, `#54`, `#60`) e descrizioni MCP statiche (`listChanged: false`) che preservano la prompt-cache (`#58`).
+- **`RSI-024` (`--snapshot` / `--restore-snapshot` / `PUT /api/concept`)**: Snapshot atomici SHA-256 in `.okf_snapshots/` (`#59`) ed editor Markdown inline nella Web UI (`#23`).
