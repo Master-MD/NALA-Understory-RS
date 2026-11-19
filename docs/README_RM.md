@@ -1,9 +1,11 @@
-# 🏔️ NALA-Understory-RS (`v0.8.0-nala.6.6.6`) — Documentaziun Rumantscha (RM)
+# 🌱🦀 NALA-Understory-RS (`v0.9.0-nala.6.6.6`) — Documentaziun Rumantscha (RM)
 
-> **Motor 100% Rust Nativ (`Edition 2024`, Nagin Node.js, Nagin Python, `0` Crates Externs, 100% Standalone & Ibrid) per [`thecodacus/understory`](https://github.com/thecodacus/understory) (`OKF v0.1`)**
+**100% Rust-Turbo Nativ (`Edition 2024`, Zero-Node.js, Zero-Python, `0` crates externas, binari `~899 KB`, `36` utensils MCP statics, `38/38` tests, `39` subsistems)**
 
-## Novitads Wave-7 `v0.8.0-nala.6.6.6` (`RSI-001..028` · `32` Utensils MCP · `34/34` Tests)
-- **`RSI-025` (`--obsidian-sync` / `memory_obsidian_sync`)**: Punt bidirecziunala Obsidian `[[Wikilink]]` / Dataview (`1.16 µs`) cun filter da segrets `.obsidian`.
-- **`RSI-026` (`--fuzzy-suggest` / `memory_fuzzy_suggest`)**: Autocompletaziun Levenshtein-1 senza allocaziun (`.okf.fst`, **`25.4 ns/op`**).
-- **`RSI-027` (`--diagram-sync` / `memory_diagram_sync`)**: Sincronisaziun Mermaid / PlantUML / Graphviz ↔ OKF (**`3.30 µs/op`**) cun sanitader XSS.
-- **`RSI-028` (`--salience-rank` & `--entropy-guard`)**: PageRank incremental (**`14.62 µs`**) e guardia d'entropia Shannon (`> 4.35 bits/car`, **`800.7 ns/op`**).
+## 🎯 Novitads Unda-8 (`v0.9.0-nala.6.6.6` · `RSI-UNDERSTORY-029..032`)
+- **`RSI-029` (`--migrate-export`)**: Migratur Clean-Room **Notion / Confluence HTML / Jira / Linear** → `OKF v0.1` en **`0.71 µs`** cun filter XSS/SSRF.
+- **`RSI-030` (`--detect-conflicts`)**: Detectur deterministic da cuntradicziuns e datas scadidas en **`1.10 µs`** (**0 chamadas LLM**, citats Evidence-Lock `[via#Llingia]`).
+- **`RSI-031` (`--patch-bundle`)**: Pachets delta `.okf.patch` suttascrits cun **HMAC-SHA256 (RFC 2104)** en **`4.67 µs`** cun protecziun anti-replay e zonas.
+- **`RSI-032` (`--cache-telemetry`)**: Telemetria da prefix KV-Cache e diff deterministic en **`1'199.5 ns`** (`>= 98%` quota da success).
+
+Binaris verifitgads (`SHA256SUMS.txt`): [GitHub Releases](https://github.com/Master-MD/NALA-Understory-RS/releases/tag/v0.9.0-nala.6.6.6). Licenza: Apache-2.0.

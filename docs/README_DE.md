@@ -1,13 +1,16 @@
-# 🇨🇭 NALA-Understory-RS (`v0.8.0-nala.6.6.6`) — Deutsche Dokumentation (DE · Wave-7 Hybrid Community & NALA-OS Edition)
+# 🌱🦀 NALA-Understory-RS (`v0.9.0-nala.6.6.6`) — Deutsche Dokumentation (DE)
 
-> **100% Native Rust-Turbo (`Edition 2024`, Zero-Node.js, Zero-Python, `0` externe Crates, 100% Universal Standalone) Drop-In Engine & Security-Härtung für [`thecodacus/understory`](https://github.com/thecodacus/understory) (`OKF v0.1`)**
+**100% Native Rust-Turbo (`Edition 2024`, Zero-Node.js, Zero-Python, `0` externe Crates, `~899 KB` Single Binary, `36` statische MCP-Tools, `38/38` Tests, `39` Benchmark-Subsysteme)**
 
-## 1. Hybride Dual-Horizon Architektur (`v0.8.0-nala.6.6.6`)
-- **Horizont 1 (Open-Source Community Engine):** Läuft **zu 100% eigenständig ohne NALA-OS** auf macOS (`arm64`/`x86_64`), Linux (`x86_64`/`aarch64`, statisch gelinkt via Musl) und Windows (`x86_64`), löst alle 12 offenen Upstream-Probleme (`#23`, `#33`, `#34`, `#40`, `#51`–`#60`) von `thecodacus/understory` und integriert Obsidian-Vaults, Mermaid/PlantUML/Graphviz-Diagramme, Levenshtein-1 Fuzzy-Suche, PageRank & Shannon-Entropy Secret-Schutz.
-- **Horizont 2 (Souveräne NALA-OS Integration):** Dient als **100% Zero-PII Upstream-Repository**, aus dem `NALA-OS v6.6.6`, `Antigravity`, `Codex`, `ZCode` und lokale Cluster-Nodes ihr produktives OKF-Langzeitgedächtnis (`32` statische Prompt-Cache-sichere MCP-Tools, `--sync-log` Session-Harvester, Nightly Dream-Gardener) beziehen.
+## 🎯 Neu in Wave-8 (`v0.9.0-nala.6.6.6` · `RSI-UNDERSTORY-029..032`)
+- **`RSI-029` (`--migrate-export`)**: Clean-Room Migrator für **Notion Markdown/CSV**, **Confluence HTML** und **Jira/Linear JSON** → `OKF v0.1` in **`0.71 µs/Dok`** (inkl. HTML/XSS/SSRF-Sanitizer & Notion-UUID-Strip).
+- **`RSI-030` (`--detect-conflicts`)**: Zero-Allocation Widerspruchs- & Stale-Claim-Detektor in **`1.10 µs`** mit **0 LLM-Aufrufen** und Evidence-Lock `[pfad#Lzeile]`-Zitaten.
+- **`RSI-031` (`--patch-bundle`)**: Kryptografische **RFC 2104 HMAC-SHA256** signierte `.okf.patch` Multi-Node Airgap-Sync-Archive in **`4.67 µs`** mit Constant-Time-MAC, Anti-Replay-Nonce & Zonen-Allowlist.
+- **`RSI-032` (`--cache-telemetry`)**: Deterministische Token-Budget Kontext-Diff & **Prompt-Cache Prefix-Pinning Telemetrie** in **`1'199.5 ns`** (`>= 98%` KV-Cache-Hit-Rate, Zonen-gebundener Prefix-Hash).
 
-## 2. Neue Wave-7 Module (`RSI-UNDERSTORY-025..028` in `v0.8.0-nala.6.6.6`)
-- **`RSI-025` Obsidian Vault & Bidirectional `[[Wikilink]]` / Dataview Bridge (`--obsidian-sync`, `memory_obsidian_sync`):** Übersetzt `[[Target|Alias]]`, `key:: value` Dataview-Felder und `#tags` verlustfrei in OKF v0.1 Konzepte (`1.16 µs/Notiz`) und blockiert `.obsidian/workspace.json` & Plugin-Secrets via `sHeriFF` Secret-Filter.
-- **`RSI-026` Zero-Allocation Succinct Prefix-Trie & Levenshtein-1 Autocomplete (`.okf.fst`, `--fuzzy-suggest`, `memory_fuzzy_suggest`):** Tippfehlertolerante Sofort-Vorschläge (`"biling"` → `"billing-api"`) in **`25.4 ns/op`** (25.6x schneller als `< 650 ns` SLA) mit strikter Zonen-Partitionierung & MAC-gesichertem `.okf.fst` Snapshot.
-- **`RSI-027` Clean-Room Mermaid / PlantUML / Graphviz ↔ OKF Bidirectional Diagram Sync (`--diagram-sync`, `memory_diagram_sync`):** Bidirektionale Extraktion & Mermaid-Synthese in **`3.30 µs/op`** inkl. `sHeriFF` XSS/Script-Label-Sanitizer.
-- **`RSI-028` Power-Iteration PageRank Salience Scorer & Shannon-Entropy Credential Canary Guard (`--salience-rank`, `--entropy-guard`):** 8-Iter Eigenvektor-Zentralität mit Self-Loop-/Link-Farm-Cap (**`14.62 µs`**) + Zero-Allocation Shannon-Entropie-Wächter (`> 4.35 bits/char` & API-Key/PEM-Präfixe ausserhalb `# [VAULT:*]` in **`800.7 ns/op`**).
+## ⚡ Verifizierte Multi-Plattform-Benchmarks (`v0.9.0-nala.6.6.6`)
+- **M4 Max (`arm64`)**: `RSI-029`: **`0.71 µs`** · `RSI-030`: **`1.10 µs`** · `RSI-031`: **`4.67 µs`** · `RSI-032`: **`1'199.5 ns`**
+- **Linux x86_64 Server**: `RSI-029`: **`2.37 µs`** · `RSI-030`: **`3.30 µs`** · `RSI-031`: **`12.20 µs`** · `RSI-032`: **`1'758.1 ns`**
+- **Proxmox VE 9.2 Airgap (`unshare -n env -i`)**: `RSI-029`: **`2.49 µs`** · `RSI-030`: **`3.54 µs`** · `RSI-031`: **`13.81 µs`** · `RSI-032`: **`1'874.7 ns`**
+
+Alle 5 Plattform-Binaries inkl. `SHA256SUMS.txt` stehen unter [Releases](https://github.com/Master-MD/NALA-Understory-RS/releases/tag/v0.9.0-nala.6.6.6) bereit. Lizenz: Apache-2.0.
