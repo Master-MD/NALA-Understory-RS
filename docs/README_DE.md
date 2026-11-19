@@ -1,11 +1,11 @@
-# 🌱🦀 NALA-Understory-RS (`v1.0.0-nala.6.6.6 LTS`) — Deutsche Dokumentation (DE)
+# 🌱🦀 NALA-Understory-RS (`v1.1.0-nala.6.6.6`) — Deutsche Dokumentation (DE)
 
-**Produktionsreifes LTS-Release · 100% Native Rust-Turbo (`Edition 2024`, Zero-Node.js, Zero-Python, `0` externe Crates, `0` Warnings, `~932 KB` Single Binary, `40` statische MCP-Tools, `42/42` Tests, `43` Benchmark-Subsysteme)**
+**100% Native Safe Rust-Turbo (`Edition 2024`, `0` Crates, `0` Warnings, `998 KB` Single Binary, `44` statische MCP-Tools, `46/46` Tests, `47` Benchmark-Subsysteme)**
 
-## 🏆 Neu in Wave-9 `v1.0.0 LTS` (`RSI-UNDERSTORY-033..036`)
-- **`RSI-033` (`--memory-decay`)**: Ebbinghaus-Decay + PageRank Working-Memory Dream Consolidator in **`7.12 µs / 1k Konzepte`** (`pin: true` & `USER_PROJECT_SHIELD` geschützt).
-- **`RSI-034` (`--watch-sse`)**: Zero-Crate Streaming JSON-RPC 2.0 HTTP SSE Delta-Push (`/api/watch-sse`) in **`278.3 ns`** mit Localhost-Only + Origin-CSRF + Zonen-Filter.
-- **`RSI-035` (`--sbom-slsa`)**: Reproduzierbare **CycloneDX 1.5 SBOM + SLSA v1.0 Provenance** in **`2.92 µs`** (kryptografischer `0`-Crate / `0`-CVE Nachweis via FIPS SHA-256).
-- **`RSI-036` (`--policy-audit --strict`)**: Deterministischer **Policy-as-Code Compliance-Linter** (`revDSG/GDPR` PII-Schutz, Secrets, Pflicht-Tags, Review-SLAs) in **`2.92 µs`** mit Fail-Closed CI Exit-Code.
+## 🚀 Neu in Wave-10 (`v1.1.0-nala.6.6.6` · `RSI-UNDERSTORY-037..040`)
+- **`RSI-037` (`--vec-search`)**: Zero-Dependency **1-Bit POPCNT / Int8 Quantized Semantic Vector Index (`.okf.vec`)** in **`2.84 µs / 1k Vektoren`** mit Zonen-Isolation & HMAC-SHA256 MAC.
+- **`RSI-038` (`--prefetch-markov`)**: Prädiktiver **Markovian Concept Pre-Fetcher** in **`17.7 ns/op`** (`226x` SLA) mit strikt zonen-gebundener Übergangs-Matrix.
+- **`RSI-039` (`--precommit-guard`)**: Deterministischer **1-Binary Git Pre-Commit Diff Auditor** in **`0.45 µs/op`** (Secrets, PII & kaputte OKF-Links ohne Node/Python/Husky).
+- **`RSI-040` (`--quorum-seal`)**: Proof-Carrying **`M-of-N` HMAC-SHA256 Policy-Zertifikat** in **`6.99 µs/op`** mit Constant-Time Verify & Anti-Downgrade-Lock.
 
-Alle 5 verifizierten Plattform-Binaries & `SHA256SUMS.txt`: [GitHub Releases](https://github.com/Master-MD/NALA-Understory-RS/releases/tag/v1.0.0-nala.6.6.6). Lizenz: Apache-2.0.
+Alle 5 verifizierten Plattform-Binaries, `SBOM_SLSA_v1.1.0-nala.6.6.6.json` & `SHA256SUMS.txt`: [GitHub Releases](https://github.com/Master-MD/NALA-Understory-RS/releases/tag/v1.1.0-nala.6.6.6). Lizenz: Apache-2.0.

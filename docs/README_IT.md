@@ -1,11 +1,11 @@
-# 🌱🦀 NALA-Understory-RS (`v1.0.0-nala.6.6.6 LTS`) — Documentazione Italiana (IT)
+# 🌱🦀 NALA-Understory-RS (`v1.1.0-nala.6.6.6`) — Documentazione Italiana (IT)
 
-**Release Produzione LTS · 100% Rust-Turbo Nativo (`Edition 2024`, Zero-Node.js, Zero-Python, `0` dipendenze, `0` warning, binario `~932 KB`, `40` strumenti MCP statici, `42/42` test, `43` sottosistemi)**
+**100% Rust-Turbo Nativo (`Edition 2024`, `0` dipendenze, `0` warning, binario `998 KB`, `44` strumenti MCP statici, `46/46` test, `47` sottosistemi)**
 
-## 🏆 Novità Ondata-9 `v1.0.0 LTS` (`RSI-UNDERSTORY-033..036`)
-- **`RSI-033` (`--memory-decay`)**: Consolidatore temporale Ebbinghaus + PageRank in **`7.12 µs / 1k`** con scudo `pin: true`.
-- **`RSI-034` (`--watch-sse`)**: Streaming JSON-RPC 2.0 HTTP SSE in **`278.3 ns`** con validazione Origin CSRF e filtro di zona.
-- **`RSI-035` (`--sbom-slsa`)**: Generatore riproducibile **CycloneDX 1.5 SBOM + SLSA v1.0** in **`2.92 µs`** (`0` crate esterne).
-- **`RSI-036` (`--policy-audit --strict`)**: Linter **Policy-as-Code** (`revDSG/GDPR`, segreti, SLA) in **`2.92 µs`** con exit code CI fail-closed.
+## 🚀 Novità Ondata-10 (`v1.1.0-nala.6.6.6` · `RSI-UNDERSTORY-037..040`)
+- **`RSI-037` (`--vec-search`)**: Indice vettoriale semantico **1-Bit POPCNT / Int8 (`.okf.vec`)** in **`2.84 µs / 1k`** con HMAC-SHA256.
+- **`RSI-038` (`--prefetch-markov`)**: Pre-fetcher predittivo **Markov** in **`17.7 ns/op`** isolato per zona.
+- **`RSI-039` (`--precommit-guard`)**: Auditor **Git Pre-Commit** 1-binario in **`0.45 µs/op`** (segreti, PII, link rotti).
+- **`RSI-040` (`--quorum-seal`)**: Certificato **Quorum M-di-N HMAC-SHA256** in **`6.99 µs/op`** anti-downgrade.
 
-Binari verificati (`SHA256SUMS.txt`): [GitHub Releases](https://github.com/Master-MD/NALA-Understory-RS/releases/tag/v1.0.0-nala.6.6.6). Licenza: Apache-2.0.
+Binari verificati (`SHA256SUMS.txt`): [GitHub Releases](https://github.com/Master-MD/NALA-Understory-RS/releases/tag/v1.1.0-nala.6.6.6). Licenza: Apache-2.0.
