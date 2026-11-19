@@ -1,11 +1,11 @@
-# 🌱🦀 NALA-Understory-RS (`v0.9.0-nala.6.6.6`) — Documentation Française (FR)
+# 🌱🦀 NALA-Understory-RS (`v1.0.0-nala.6.6.6 LTS`) — Documentation Française (FR)
 
-**100% Rust-Turbo Natif (`Edition 2024`, Zéro-Node.js, Zéro-Python, `0` crate externe, binaire `~899 Ko`, `36` outils MCP statiques, `38/38` tests unitaires, `39` sous-systèmes)**
+**Version Production LTS · 100% Rust-Turbo Natif (`Edition 2024`, Zéro-Node.js, Zéro-Python, `0` crate externe, `0` avertissement, binaire `~932 Ko`, `40` outils MCP statiques, `42/42` tests, `43` sous-systèmes)**
 
-## 🎯 Nouveautés Vague-8 (`v0.9.0-nala.6.6.6` · `RSI-UNDERSTORY-029..032`)
-- **`RSI-029` (`--migrate-export`)** : Migrateur Clean-Room **Notion / Confluence HTML / Jira / Linear** → `OKF v0.1` en **`0.71 µs`** avec filtrage XSS/SSRF.
-- **`RSI-030` (`--detect-conflicts`)** : Détecteur sémantique de contradictions et dates expirées en **`1.10 µs`** (**0 appel LLM**, citations Evidence-Lock `[chemin#Lligne]`).
-- **`RSI-031` (`--patch-bundle`)** : Archives delta `.okf.patch` signées **HMAC-SHA256 (RFC 2104)** en **`4.67 µs`** avec vérification à temps constant, anti-rejeu et filtrage par zone.
-- **`RSI-032` (`--cache-telemetry`)** : Télémétrie de préfixe KV-Cache et diff déterministe en **`1 199.5 ns`** (`>= 98%` de taux de succès de préfixe).
+## 🏆 Nouveautés Vague-9 `v1.0.0 LTS` (`RSI-UNDERSTORY-033..036`)
+- **`RSI-033` (`--memory-decay`)** : Consolidateur temporel Ebbinghaus + PageRank en **`7.12 µs / 1k`** avec bouclier `pin: true`.
+- **`RSI-034` (`--watch-sse`)** : Streaming JSON-RPC 2.0 HTTP SSE en **`278.3 ns`** avec protection Origin CSRF et filtrage par zone.
+- **`RSI-035` (`--sbom-slsa`)** : Générateur **CycloneDX 1.5 SBOM + SLSA v1.0** reproductible en **`2.92 µs`** (`0` crate externe = `0` CVE transitive).
+- **`RSI-036` (`--policy-audit --strict`)** : Linter **Policy-as-Code** (`revDSG/RGPD`, secrets, SLA) en **`2.92 µs`** avec code de sortie CI fail-closed.
 
-Binaires vérifiés (`SHA256SUMS.txt`) : [GitHub Releases](https://github.com/Master-MD/NALA-Understory-RS/releases/tag/v0.9.0-nala.6.6.6). Licence : Apache-2.0.
+Binaires vérifiés (`SHA256SUMS.txt`) : [GitHub Releases](https://github.com/Master-MD/NALA-Understory-RS/releases/tag/v1.0.0-nala.6.6.6). Licence : Apache-2.0.
